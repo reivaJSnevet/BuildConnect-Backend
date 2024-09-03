@@ -7,6 +7,7 @@ import { dbConnection } from './src/config/db.js';
 //importing routes
 import { userRoutes,
     categoryRoutes,
+    companyRoutes,
 } from './src/routes/index.js';
 
 
@@ -24,6 +25,7 @@ await dbConnection();
 
 app.use("/api", userRoutes);
 app.use("/api", categoryRoutes);
+app.use("/api", companyRoutes);
 
 //home route
 app.get("/", (req, res) => {
