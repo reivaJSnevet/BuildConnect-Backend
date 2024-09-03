@@ -5,7 +5,11 @@ import express from "express";
 import { dbConnection } from './src/config/db.js';
 
 //importing routes
-import userRouter from './src/routes/userRoutes.js';
+import { userRoutes,
+    categoryRoutes,
+    companyRoutes,
+} from './src/routes/index.js';
+
 
 
 const app = express();
@@ -19,7 +23,9 @@ app.use(express.json());
 await dbConnection();
 
 
-app.use("/api", userRouter);
+app.use("/api", userRoutes);
+app.use("/api", categoryRoutes);
+app.use("/api", companyRoutes);
 
 //home route
 app.get("/", (req, res) => {

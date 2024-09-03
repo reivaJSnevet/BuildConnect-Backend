@@ -1,9 +1,9 @@
-import { DataTypes } from 'sequelize';
-import bcrypt from 'bcrypt';
-import db from '../config/db.js';
+import { DataTypes } from "sequelize";
+import bcrypt from "bcrypt";
+import db from "../config/db.js";
 
 const User = db.define(
-  'User',
+  "User",
   {
     id: {
       type: DataTypes.UUID,
@@ -36,9 +36,9 @@ const User = db.define(
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM('user', 'admin'),
+      type: DataTypes.ENUM("user", "admin"),
       allowNull: false,
-      defaultValue: 'user',
+      defaultValue: "user",
     },
     isEmailVerified: {
       type: DataTypes.BOOLEAN,
@@ -63,7 +63,7 @@ const User = db.define(
       beforeCreate: async (user) => await hashPassword(user),
       beforeBulkCreate: async (users) => await hashPasswordBulk(users),
       beforeUpdate: async (user) => {
-        if (user.changed('password')) {
+        if (user.changed("password")) {
           await hashPassword(user);
         }
       },

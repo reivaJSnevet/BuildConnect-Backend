@@ -1,11 +1,11 @@
-import userService from "../services/userService.js";
+import categoryService from "../services/categoryService.js";
 
-const userController = {
+const categoryController = {
   create: async (req, res) => {
     try {
-      const newUser = req.body;
-      const user = await userService.create(newUser);
-      res.status(201).json(user);
+      const newCategory = req.body;
+      const category = await categoryService.create(newCategory);
+      res.status(201).json(category);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -13,8 +13,8 @@ const userController = {
 
   getAll: async (req, res) => {
     try {
-      const users = await userService.getAll();
-      res.status(200).json(users);
+      const categories = await categoryService.getAll();
+      res.status(200).json(categories);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -23,8 +23,8 @@ const userController = {
   getById: async (req, res) => {
     try {
       const { id } = req.params;
-      const user = await userService.getById(id);
-      res.status(200).json(user);
+      const category = await categoryService.getById(id);
+      res.status(200).json(category);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -33,9 +33,9 @@ const userController = {
   update: async (req, res) => {
     try {
       const { id } = req.params;
-      const updatedUser = req.body;
-      const user = await userService.update(id, updatedUser);
-      res.status(200).json(user);
+      const updatedCategory = req.body;
+      const category = await categoryService.update(id, updatedCategory);
+      res.status(200).json(category);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -44,12 +44,12 @@ const userController = {
   delete: async (req, res) => {
     try {
       const { id } = req.params;
-      const user = await userService.delete(id);
-      res.status(200).json(user);
+      const category = await categoryService.delete(id);
+      res.status(200).json(category);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   },
 };
 
-export default userController;
+export default categoryController;
