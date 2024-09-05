@@ -35,10 +35,10 @@ const Company = db.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // pricing: {
-    //     type: DataTypes.JSON,
-    //     allowNull: false,
-    // },
+    pricing: {
+        type: DataTypes.JSON,
+        allowNull: false,
+    },
   },
   {
     timestamps: true,
