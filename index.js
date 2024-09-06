@@ -8,7 +8,8 @@ import { dbConnection } from './src/config/db.js';
 import { userRoutes,
     categoryRoutes,
     companyRoutes,
-    projectRoutes
+    projectRoutes,
+    commentRoutes
 } from './src/routes/index.js';
 
 
@@ -28,6 +29,7 @@ app.use("/api", userRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", companyRoutes);
 app.use("/api", projectRoutes);
+app.use("/api", commentRoutes);
 
 //home route
 app.get("/", (req, res) => {
