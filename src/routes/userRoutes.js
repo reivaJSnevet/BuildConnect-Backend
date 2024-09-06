@@ -12,4 +12,7 @@ userRouter.delete("/users/:id", userController.delete);
 userRouter.post("/users/:userId/companies/:companyId", userController.addPermission);
 userRouter.delete("/users/:userId/companies/:companyId", userController.removePermission);
 
+userRouter.post("/users/:userId/ratings", userController.addRating);
+userRouter.put("/users/:userId/ratings/:ratingId", userController.updateRating);
+
 export default userRouter;

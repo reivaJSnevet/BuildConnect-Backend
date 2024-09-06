@@ -82,7 +82,35 @@ const userService = {
       throw error;
     }
   },
-  
+
+  addRating: async (userId, companyId, score) => {
+    try {
+      const companyCompanyId = companyId;
+      const user = await User.findByPk(userId);
+      if (!user) {
+        throw new Error(`User not found with id: ${userId}`);
+      }
+      await user.addRating( companyCompanyId, { through: { score } });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  updateRating: async (userId, companyId, score) => {
+    try {
+      const companyCompanyId = companyId;
+      const user = await User.findByPk(userId);
+      if (!user) {
+        throw new Error(`User not found with id: ${userId}`);
+      }
+      await user.addRating(companyCompanyId, { through: { score }, update: true });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };
 
 export default userService;

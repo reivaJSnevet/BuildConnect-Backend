@@ -69,7 +69,29 @@ const userController = {
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
-  }
+  },
+
+  addRating: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { companyId, score } = req.body;
+      const user = await userService.addRating(userId, companyId, score);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  },
+
+  updateRating: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { companyId, score } = req.body;
+      const user = await userService.updateRating(userId, companyId, score);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  },
 
 };
 
