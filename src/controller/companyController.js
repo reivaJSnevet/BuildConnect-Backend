@@ -50,6 +50,26 @@ const companyController = {
         res.status(400).json({ error: error.message });
         }
     },
+
+    addBookmark: async (req, res) => {
+        try {
+        const { companyId, projectId } = req.params;
+        const company = await companyService.addBookmark(companyId, projectId);
+        res.status(200).json(company);
+        } catch (error) {
+        res.status(400).json({ error: error.message });
+        }
+    },
+
+    removeBookmark: async (req, res) => {
+        try {
+        const { companyId, projectId } = req.params;
+        const company = await companyService.removeBookmark(companyId, projectId);
+        res.status(200).json(company);
+        } catch (error) {
+        res.status(400).json({ error: error.message });
+        }
+    },
 };
 
 export default companyController;

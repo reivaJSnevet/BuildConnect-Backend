@@ -27,6 +27,11 @@ const Company = db.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role:{
+      type: DataTypes.ENUM("company"),
+      allowNull: false,
+      defaultValue: "company",
+    },
     phone: {
       type: DataTypes.JSON,
       allowNull: false,
@@ -38,6 +43,23 @@ const Company = db.define(
     pricing: {
         type: DataTypes.JSON,
         allowNull: false,
+    },
+    isEmailVerified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    verificationToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    refreshToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    recoveryToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {

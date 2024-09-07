@@ -1,4 +1,5 @@
 import { Company } from "../models/index.js";
+import { NotFoundError } from "../errors/index.js";
 
 const companyService = {
     create: async (newCompany) => {
@@ -52,6 +53,32 @@ const companyService = {
         }
         await company.destroy();
         return `Company with id: ${id} has been deleted`;
+        } catch (error) {
+        throw error;
+        }
+    },
+
+    addBookmark: async (companyId, projectId) => {
+        try {
+        const company = await Company.findByPk(companyId);
+        if (!company) {
+            throw new NotFoundError("Company", companyId);
+        }
+        await company.addBookmark(projectId);
+        return `Project with id: ${projectId} has been bookmarked by company with id: ${companyId}`;
+        } catch (error) {
+        throw error;
+        }
+    },
+
+    removeBookmark: async (companyId, projectId) => {
+        try {
+        const company = await Company.findByPk(companyId);
+        if (!company) {
+            throw new NotFoundError("Company", companyId);
+        }
+        await company.removeBookmark(projectId);
+        return `Project with id: ${projectId} has been removed from bookmarks of company with id: ${companyId}`;
         } catch (error) {
         throw error;
         }

@@ -56,6 +56,61 @@ const userService = {
       throw error;
     }
   },
+
+  addPermission: async (userId, companyId) => {
+    try {
+      const user = await User.findByPk(userId);
+      if (!user) {
+        throw new Error(`User not found with id: ${userId}`);
+      }
+      await user.addPermission(companyId);
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  removePermission: async (userId, companyId) => {
+    try {
+      const user = await User.findByPk(userId);
+      if (!user) {
+        throw new Error(`User not found with id: ${userId}`);
+      }
+      await user.removePermission(companyId);
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  addRating: async (userId, companyId, score) => {
+    try {
+      const companyCompanyId = companyId;
+      const user = await User.findByPk(userId);
+      if (!user) {
+        throw new Error(`User not found with id: ${userId}`);
+      }
+      await user.addRating( companyCompanyId, { through: { score } });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  updateRating: async (userId, companyId, score) => {
+    try {
+      const companyCompanyId = companyId;
+      const user = await User.findByPk(userId);
+      if (!user) {
+        throw new Error(`User not found with id: ${userId}`);
+      }
+      await user.addRating(companyCompanyId, { through: { score }, update: true });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };
 
 export default userService;

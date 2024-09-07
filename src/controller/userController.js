@@ -50,6 +50,49 @@ const userController = {
       res.status(400).json({ error: error.message });
     }
   },
+
+  addPermission: async (req, res) => {
+    try {
+      const { userId, companyId } = req.params;
+      const user = await userService.addPermission(userId, companyId);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  },
+
+  removePermission: async (req, res) => {
+    try {
+      const { userId, companyId } = req.params;
+      const user = await userService.removePermission(userId, companyId);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  },
+
+  addRating: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { companyId, score } = req.body;
+      const user = await userService.addRating(userId, companyId, score);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  },
+
+  updateRating: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { companyId, score } = req.body;
+      const user = await userService.updateRating(userId, companyId, score);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  },
+
 };
 
 export default userController;
