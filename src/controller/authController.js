@@ -4,8 +4,30 @@ const authController = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-      const user = await authService.login(email, password);
-      res.status(200).json(user);
+      const {user, company, accessToken} = await authService.login(email, password);
+      
+      if (user) {
+        res.cookie("access_token", accessToken, {
+          httpOnly: true,
+          sameSite: "none",
+          secure: true,
+          /* signed: true, */
+          maxAge: 86400000,
+      });
+
+      res.status(200).json({ user, accessToken });
+      } else {
+        res.cookie("access_token", accessToken, {
+          httpOnly: true,
+          sameSite: "none",
+          secure: true,
+          /* signed: true, */
+          maxAge: 86400000,
+      });
+
+      res.status(200).json({ company, accessToken });
+      }
+
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

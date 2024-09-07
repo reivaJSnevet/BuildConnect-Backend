@@ -53,7 +53,7 @@ const Company = db.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    refreshToken: {
+    accessToken: {
       type: DataTypes.STRING,
       allowNull: true,
     },
