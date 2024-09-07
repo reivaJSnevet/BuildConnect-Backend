@@ -6,8 +6,8 @@ import { generateEmailToken } from '../utils/tokens/emailVerifyToken.js';
 const authService = {
   login: async (email, password) => {
     try {
-      const user = await User.findOne({ where: { email } });
-      const company = await Company.findOne({ where: { email } });
+      const user = await User.scope("withPassword").findOne({ where: { email } });
+      const company = await Company.scope("withPassword").findOne({ where: { email } });
 
       if (!user && !company) {
         throw new Error('User not found');
@@ -23,6 +23,9 @@ const authService = {
         }
 
         delete user.dataValues.password;
+        delete user.dataValues.verificationToken;
+        delete user.dataValues.refreshToken;
+        delete user.dataValues.recoveryToken;
 
         return user;
       }
@@ -37,6 +40,9 @@ const authService = {
         }
 
         delete company.dataValues.password;
+        delete company.dataValues.verificationToken;
+        delete company.dataValues.refreshToken;
+        delete company.dataValues.recoveryToken;
 
         return company;
       }

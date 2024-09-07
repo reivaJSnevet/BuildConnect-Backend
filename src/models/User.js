@@ -68,6 +68,14 @@ const User = db.define(
         }
       },
     },
+    defaultScope: {
+      attributes:{exclude: ['password', 'verificationToken', 'refreshToken', 'recoveryToken']}
+    },
+    scopes: {
+      withPassword: {
+        attributes: { include: ['password'] },
+      },
+    },
   }
 );
 
