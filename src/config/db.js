@@ -40,7 +40,7 @@ export async function dbConnection() {
 
       try {
           //synchronizing the models with the database
-          await db.sync({ force: false });
+          await db.sync({ alter: true });
           console.log(
               "\x1b[36m%s\x1b[0m",
               "All models were synchronized successfully."

@@ -5,11 +5,13 @@ import express from "express";
 import { dbConnection } from './src/config/db.js';
 
 //importing routes
-import { userRoutes,
+import {
+    userRoutes,
     categoryRoutes,
     companyRoutes,
     projectRoutes,
-    commentRoutes
+    commentRoutes,
+    authRoutes
 } from './src/routes/index.js';
 
 
@@ -25,11 +27,15 @@ app.use(express.json());
 await dbConnection();
 
 
+//routes
+app.use("/api/auth", authRoutes);
+
 app.use("/api", userRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", companyRoutes);
 app.use("/api", projectRoutes);
 app.use("/api", commentRoutes);
+
 
 //home route
 app.get("/", (req, res) => {
