@@ -1,8 +1,10 @@
 //importing Node.js modules
 import express from "express";
+import cookieParser from "cookie-parser";
 
 //importing connection files
 import { dbConnection } from './src/config/db.js';
+import errorHandler from "./src/middlewares/errorHandler.js";
 
 //importing routes
 import {
@@ -13,6 +15,7 @@ import {
     commentRoutes,
     authRoutes
 } from './src/routes/index.js';
+import requireJWT from './src/middlewares/requireJWT.js';
 
 
 
@@ -20,6 +23,7 @@ const app = express();
 
 
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.json());
 
 
@@ -29,6 +33,8 @@ await dbConnection();
 
 //routes
 app.use("/api/auth", authRoutes);
+
+app.use(requireJWT);
 
 app.use("/api", userRoutes);
 app.use("/api", categoryRoutes);
@@ -51,6 +57,11 @@ app.use((req, res, next) => {
       message: `The resource ${req.originalUrl} was not found`,
   });
 });
+
+
+//error handling middleware
+app.use(errorHandler);
+
 
 //start the server
 const port = process.env.PORT || 4000;
