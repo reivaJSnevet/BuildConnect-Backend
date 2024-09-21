@@ -17,6 +17,7 @@ import {
 } from './src/routes/index.js';
 import requireJWT from './src/middlewares/requireJWT.js';
 
+import swaggerJSDoc from "./src/config/swagger.js";
 
 
 const app = express();
@@ -25,10 +26,12 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.json());
+swaggerJSDoc(app);
 
 
 //calling the function to establish a connection to the database
 await dbConnection();
+
 
 
 //routes
@@ -41,6 +44,7 @@ app.use("/api", categoryRoutes);
 app.use("/api", companyRoutes);
 app.use("/api", projectRoutes);
 app.use("/api", commentRoutes);
+
 
 
 //home route
