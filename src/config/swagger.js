@@ -31,8 +31,8 @@ const options = {
         ],
     },
     apis: [
-        './docs/swagger/schemas/*.js',
-        './docs/swagger/routes/*.js'
+        './src/docs/swagger/schemas/*.js',
+        './src/docs/swagger/routes/*.js',
     ],
 }
 
