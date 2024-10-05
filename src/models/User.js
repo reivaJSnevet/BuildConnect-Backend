@@ -50,7 +50,7 @@ const User = db.define(
       allowNull: true,
     },
     accessToken: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     recoveryToken: {
