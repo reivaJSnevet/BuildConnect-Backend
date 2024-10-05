@@ -1,6 +1,7 @@
 //importing Node.js modules
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 //importing connection files
 import { dbConnection } from './src/config/db.js';
@@ -18,11 +19,12 @@ import {
 import requireJWT from './src/middlewares/requireJWT.js';
 
 import swaggerJSDoc from "./src/config/swagger.js";
+import corsOptions from './src/config/corsOptions.js';
 
 
 const app = express();
 
-
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.json());
