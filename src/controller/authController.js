@@ -4,30 +4,32 @@ const authController = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-      const {user, company, accessToken} = await authService.login(email, password);
-      
+      const { user, company, accessToken } = await authService.login(
+        email,
+        password
+      );
+
       if (user) {
-        res.cookie("access_token", accessToken, {
+        res.cookie('access_token', accessToken, {
           httpOnly: true,
-          sameSite: "none",
+          sameSite: 'none',
           secure: true,
           /* signed: true, */
           maxAge: 86400000,
-      });
+        });
 
-      res.status(200).json({ user, accessToken });
+        res.status(200).json({ user, accessToken });
       } else {
-        res.cookie("access_token", accessToken, {
+        res.cookie('access_token', accessToken, {
           httpOnly: true,
-          sameSite: "none",
+          sameSite: 'none',
           secure: true,
           /* signed: true, */
           maxAge: 86400000,
-      });
+        });
 
-      res.status(200).json({ company, accessToken });
+        res.status(200).json({ company, accessToken });
       }
-
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -56,6 +58,25 @@ const authController = {
       const { token } = req.params;
       await authService.verifyEmail(token);
       res.status(200).json({ message: 'Email verified' });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  },
+
+  refreshToken: async (req, res) => {
+    try {
+      const expiredToken = req.cookies.access_token;
+      const { accessToken, user, company } = await authService.refreshToken(expiredToken);
+
+      res.cookie('access_token', accessToken, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        /* signed: true, */
+        maxAge: 86400000,
+      });
+
+      res.status(200).json({ accessToken, user, company });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

@@ -23,7 +23,8 @@ const authService = {
           throw new Error('Invalid password');
         }
 
-        user.accessToken = generateAccessToken(user);
+        const accessToken = generateAccessToken(user);
+        user.accessToken = accessToken;
         await user.save();
 
         delete user.dataValues.password;
@@ -31,7 +32,7 @@ const authService = {
         delete user.dataValues.accessToken;
         delete user.dataValues.recoveryToken;
 
-        return {user, accessToken: user.accessToken};
+        return {user, accessToken};
       }
 
       if (company) {
@@ -124,6 +125,33 @@ const authService = {
       throw new Error(error.message);
     }
   },
+
+  refreshToken: async (expiredToken) => {
+    try {
+      const user = await User.findOne({ where: { accessToken: expiredToken } });
+      const company = await Company.findOne({ where: { accessToken: expiredToken } });
+
+      if (!user && !company) {
+        throw new Error('Invalid token');
+      }
+
+      if (user) {
+        user.accessToken = generateAccessToken(user);
+        await user.save();
+        return { user, accessToken: user.accessToken };
+      }
+
+      if (company) {
+        company.accessToken = generateAccessToken(company);
+        await company.save();
+        return { company, accessToken: company.accessToken };
+      }
+
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
 };
 
 export default authService;
