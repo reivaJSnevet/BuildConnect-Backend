@@ -1,4 +1,4 @@
-import { Project } from '../models/index.js';
+import { Project, Category, User } from '../models/index.js';
 
 const projectService = {
     create: async (newProject) => {
@@ -12,7 +12,12 @@ const projectService = {
     
     getAll: async () => {
         try {
-        const projects = await Project.findAll();
+          const projects = await Project.findAll({
+            include: [
+              { model: Category, attributes: ['name'] },
+              { model: User, attributes: ['name', 'lastName'] },
+            ],
+          });
         return projects;
         } catch (error) {
         throw error;
@@ -21,7 +26,12 @@ const projectService = {
     
     getById: async (id) => {
         try {
-        const project = await Project.findByPk(id);
+        const project = await Project.findByPk(id, {
+          include: [
+            { model: Category, attributes: ['name'] },
+            { model: User, attributes: ['name', 'lastName'] },
+          ],
+        });
         if (!project) {
             throw new Error(`Project not found with id: ${id}`);
         }
