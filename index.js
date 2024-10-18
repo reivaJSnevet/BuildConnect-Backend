@@ -5,6 +5,8 @@ import cors from "cors";
 
 //importing connection files
 import { dbConnection } from './src/config/db.js';
+import { mailConnection } from './src/config/nodemailer.js';
+
 import errorHandler from "./src/middlewares/errorHandler.js";
 
 //importing routes
@@ -34,6 +36,7 @@ swaggerJSDoc(app);
 //calling the function to establish a connection to the database
 await dbConnection();
 
+await mailConnection();
 
 
 //routes
