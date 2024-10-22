@@ -81,6 +81,20 @@ const authController = {
       res.status(400).json({ error: error.message });
     }
   },
+
+  logout: async (req, res) => {
+    try {
+
+      const access_token = req.cookies.access_token;
+
+      await authService.logout(access_token);
+      
+      res.clearCookie('access_token');
+      res.status(200).json({ message: 'Logged out' });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  },
 };
 
 export default authController;

@@ -8,5 +8,6 @@ authRouter.post("/register-user", authController.registerUser);
 authRouter.post("/register-company", authController.registerCompany);
 authRouter.get("/verify-email/:token", authController.verifyEmail);
 authRouter.get("/refresh-token", authController.refreshToken);
+authRouter.get("/logout", authController.logout);
 
 export default authRouter;

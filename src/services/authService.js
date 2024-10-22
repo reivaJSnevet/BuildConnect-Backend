@@ -44,7 +44,8 @@ const authService = {
           throw new Error('Invalid password');
         }
 
-        company.accessToken = generateAccessToken(company);
+        const accessToken = generateAccessToken(company);
+        company.accessToken = accessToken;
         await company.save();
 
         delete company.dataValues.password;
@@ -52,7 +53,7 @@ const authService = {
         delete company.dataValues.accessToken;
         delete company.dataValues.recoveryToken;
 
-        return {company, accessToken: company.accessToken};
+        return {company, accessToken};
       }
     } catch (error) {
       throw new Error(error.message);
@@ -150,7 +151,32 @@ const authService = {
     } catch (error) {
       throw new Error(error.message);
     }
-  }
+  },
+
+  logout: async (token) => {
+    try {
+      const user = await User.findOne({ where: { accessToken: token } });
+      const company = await Company.findOne({ where: { accessToken: token } });
+
+      if (!user && !company) {
+        throw new Error('Invalid token');
+      }
+
+      if (user) {
+        user.accessToken = null;
+        await user.save();
+      }
+
+      if (company) {
+        company.accessToken = null;
+        await company.save();
+      }
+
+      return { message: 'Logout successful' };
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
 
 };
 
