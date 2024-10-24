@@ -56,7 +56,7 @@ const authService = {
         return {company, accessToken};
       }
     } catch (error) {
-      throw new Error(error.message);
+      throw error;
     }
   },
 
@@ -75,12 +75,15 @@ const authService = {
 
       return user;
     } catch (error) {
-      throw new Error(error.message);
+      throw error;
     }
   },
 
   registerCompany: async (companyData) => {
     try {
+
+      console.log("Entra a registerCompany");
+
       const company = await Company.create({
         ...companyData,
         isEmailVerified: false,
@@ -94,7 +97,7 @@ const authService = {
 
       return company;
     } catch (error) {
-      throw new Error(error.message);
+      throw error;
     }
   },
 
@@ -123,7 +126,7 @@ const authService = {
 
       return { message: 'Email verified' };
     } catch (error) {
-      throw new Error(error.message);
+      throw error;
     }
   },
 

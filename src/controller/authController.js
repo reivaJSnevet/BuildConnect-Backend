@@ -35,21 +35,21 @@ const authController = {
     }
   },
 
-  registerUser: async (req, res) => {
+  registerUser: async (req, res, next) => {
     try {
       const user = await authService.register(req.body);
       res.status(201).json(user);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      next(error);
     }
   },
 
-  registerCompany: async (req, res) => {
+  registerCompany: async (req, res, next) => {
     try {
       const company = await authService.registerCompany(req.body);
       res.status(201).json(company);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      next(error);
     }
   },
 
