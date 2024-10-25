@@ -4,3 +4,4 @@ export { default as companyRoutes } from './companyRoutes.js';
 export { default as projectRoutes } from './projectRoutes.js';
 export { default as commentRoutes } from './commentRoutes.js';
 export { default as authRoutes } from './authRoutes.js';
+export { default as contactRoutes } from './contactRoutes.js';
