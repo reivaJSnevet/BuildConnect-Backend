@@ -16,7 +16,8 @@ import {
     companyRoutes,
     projectRoutes,
     commentRoutes,
-    authRoutes
+    authRoutes,
+    contactRoutes
 } from './src/routes/index.js';
 import requireJWT from './src/middlewares/requireJWT.js';
 
@@ -38,7 +39,7 @@ await dbConnection();
 
 await mailConnection();
 
-
+app.use("/api", contactRoutes);
 //routes
 app.use("/api/auth", authRoutes);
 
