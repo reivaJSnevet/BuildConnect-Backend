@@ -17,7 +17,6 @@ const userService = {
 
             delete user.dataValues.password;
             delete user.dataValues.emailVerificationToken;
-            delete user.dataValues.contacts;
 
             return user;
         } catch (error) {
