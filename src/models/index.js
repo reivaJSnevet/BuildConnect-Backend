@@ -14,13 +14,13 @@ Company.belongsTo(User, { foreignKey: { allowNull: false }, onDelete: 'Cascade' 
 User.hasOne(Company, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
 
 Owner.hasMany(Project, { foreignKey: { allowNull: false }, onDelete: 'Cascade', as: "projects" });
-Project.belongsTo(Owner, { foreignKey: { allowNull: false }, onDelete: 'Cascade', as: "owner" });
+Project.belongsTo(Owner, { foreignKey: { allowNull: false }, onDelete: 'Cascade', as: "projects" });
 
-Project.belongsToMany(Category, { through: "projectCategory", as: "categories" });
-Category.belongsToMany(Project, { through: "projectCategory" });
+Project.belongsToMany(Category, { through: "project_category", as: "categories" });
+Category.belongsToMany(Project, { through: "project_category", as: "categories" });
 
-Project.belongsToMany(ProjectType, { through: "projectType", as: "types" });
-ProjectType.belongsToMany(Project, { through: "projectType" });
+Project.belongsToMany(ProjectType, { through: "project_type", as: "types" });
+ProjectType.belongsToMany(Project, { through: "project_type", as: "types" });
 
 Owner.belongsToMany(Company, { through: Rating, as: "ratings" });
 Company.belongsToMany(Owner, { through: Rating, as: "reviewers" });
@@ -28,11 +28,11 @@ Company.belongsToMany(Owner, { through: Rating, as: "reviewers" });
 Owner.belongsToMany(Company, { through: Comment, as: "comments" });
 Company.belongsToMany(Owner, { through: Comment, as: "authors" });
 
-Owner.belongsToMany(Company, { through: "rating_permission", as: "permissions" });
-Company.belongsToMany(Owner, { through : "rating_permission", as: "permissions" });
+Owner.belongsToMany(Company, { through: "rating_permission", onDelete: 'Cascade', as: "permissions" });
+Company.belongsToMany(Owner, { through : "rating_permission", onDelete: 'Cascade', as: "permissions" });
 
-Company.belongsToMany(Project, { through: "project_bookmark", as: "bookmarks" });
-Project.belongsToMany(Company, { through: "project_bookmark", as: "bookmarks" });
+Company.belongsToMany(Project, { through: "project_bookmark", onDelete: 'Cascade', as: "bookmarks" });
+Project.belongsToMany(Company, { through: "project_bookmark", onDelete: 'Cascade', as: "bookmarks" });
 
 export {
   User,
