@@ -1,26 +1,23 @@
-import { DataTypes } from "sequelize";
-import db from "../config/db.js";
+import { DataTypes } from 'sequelize';
+import db from '../config/db.js';
 
-const Category = db.define(
-    "Category",
-    {
-        id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
-        },
-        name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        },
-        description: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        },
+const Category = db.define('Category', {
+  id: {
+    type: DataTypes.UUID,
+    primaryKey: true,
+    defaultValue: DataTypes.UUIDV4,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      len: {
+        args: [1, 255],
+      },
+      isAlphanumeric: true,
     },
-    {
-        timestamps: false,
-    }
-    );
+  },
+});
 
 export default Category;

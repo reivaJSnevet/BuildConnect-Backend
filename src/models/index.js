@@ -4,27 +4,35 @@ import Company from './Company.js';
 import Project from './Project.js';
 import Comment from './Comment.js';
 import Rating from './Rating.js';
+import Owner from './Owner.js';
+import ProjectType from './ProjectType.js';
 
-User.hasMany(Project, {foreignKey: {allowNull: false},  onUpdate: 'Cascade'});
-Project.belongsTo(User, {foreignKey: {allowNull: false},  onUpdate: 'Cascade'});
+Owner.belongsTo(User, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
+User.hasOne(Owner, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
 
-Category.hasMany(Project, {foreignKey: {allowNull: false},  onUpdate: 'Cascade'});
-Project.belongsTo(Category, {foreignKey: {allowNull: false},  onUpdate: 'Cascade'});
+Company.belongsTo(User, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
+User.hasOne(Company, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
 
-User.hasMany(Comment, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
-Comment.belongsTo(User, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
+Owner.hasMany(Project, { foreignKey: { allowNull: false }, onDelete: 'Cascade', as: "projects" });
+Project.belongsTo(Owner, { foreignKey: { allowNull: false }, onDelete: 'Cascade', as: "owner" });
 
-Company.hasMany(Comment, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
-Comment.belongsTo(Company, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
+Project.belongsToMany(Category, { through: "projectCategory", as: "categories" });
+Category.belongsToMany(Project, { through: "projectCategory" });
 
-User.belongsToMany(Company, { through: Rating, as: "ratings" });
-Company.belongsToMany(User, { through: Rating, as: "ratings" });
+Project.belongsToMany(ProjectType, { through: "projectType", as: "types" });
+ProjectType.belongsToMany(Project, { through: "projectType" });
 
-User.belongsToMany(Company, { through: "permission", as: "permissions" });
-Company.belongsToMany(User, { through : "permission", as: "permissions" });
+Owner.belongsToMany(Company, { through: Rating, as: "ratings" });
+Company.belongsToMany(Owner, { through: Rating, as: "reviewers" });
 
-Company.belongsToMany(Project, { through: "projectBookmark", as: "bookmarks" });
-Project.belongsToMany(Company, { through: "projectBookmark", as: "bookmarks" });
+Owner.belongsToMany(Company, { through: Comment, as: "comments" });
+Company.belongsToMany(Owner, { through: Comment, as: "authors" });
+
+Owner.belongsToMany(Company, { through: "rating_permission", as: "permissions" });
+Company.belongsToMany(Owner, { through : "rating_permission", as: "permissions" });
+
+Company.belongsToMany(Project, { through: "project_bookmark", as: "bookmarks" });
+Project.belongsToMany(Company, { through: "project_bookmark", as: "bookmarks" });
 
 export {
   User,
@@ -33,4 +41,6 @@ export {
   Project,
   Comment,
   Rating,
+  Owner,
+  ProjectType,
 }

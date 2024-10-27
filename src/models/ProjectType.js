@@ -1,25 +1,26 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 
-const Comment = db.define(
-  'Comment',
+const ProjectType = db.define(
+  'ProjectType',
   {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    text: {
-      type: DataTypes.TEXT('medium'),
+    name: {
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: {
+          args: [1, 255],
+        },
+        isAlphanumeric: true,
       },
     },
   },
-  {
-    timestamps: true,
-  }
 );
 
-export default Comment;
+export default ProjectType;

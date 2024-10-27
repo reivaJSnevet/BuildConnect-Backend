@@ -1,85 +1,119 @@
-import { DataTypes } from "sequelize";
-import bcrypt from "bcrypt";
-import db from "../config/db.js";
+import { DataTypes } from 'sequelize';
+import bcrypt from 'bcrypt';
+import db from '../config/db.js';
+import { ValidationError } from '../errors/index.js';
 
 const User = db.define(
-  "User",
+  'User',
   {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName2: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    phone: {
-      type: DataTypes.JSON,
-      allowNull: false,
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      validate: {
+        isEmail: true,
+      },
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [8, 255],
+        },
+      },
     },
     role: {
-      type: DataTypes.ENUM("user", "admin"),
+      type: DataTypes.ENUM('owner', 'company', 'admin'),
       allowNull: false,
-      defaultValue: "user",
     },
-    isEmailVerified: {
-      type: DataTypes.BOOLEAN,
+    contacts: {
+      type: DataTypes.JSON,
       allowNull: false,
-      defaultValue: false,
+      defaultValue: { emails: [], numbers: [] },
+      validate: {
+        isJSON: (value) => {
+          try {
+            const string = JSON.stringify(value);
+            JSON.parse(string);
+          } catch (error) {
+            throw new ValidationError(
+              'The contacts field must be a valid JSON object.',
+              contacts
+            );
+          }
+        },
+        isValidStructure(value) {
+          if (
+            typeof value !== 'object' ||
+            !Array.isArray(value.emails) ||
+            !Array.isArray(value.numbers)
+          ) {
+            throw new ValidationError(
+              "The contacts field must be an object with 'emails' and 'numbers' arrays.",
+              contacts
+            );
+          }
+        },
+      },
     },
-    verificationToken: {
+    emailVerificationToken: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    accessToken: {
-      type: DataTypes.TEXT,
       allowNull: true,
     },
     recoveryToken: {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    refreshToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     hooks: {
-      beforeCreate: async (user) => await hashPassword(user),
+      beforeCreate: async (user) => {
+        await verifyOnetoOneAssociation(user);
+        await hashPassword(user);
+      },
       beforeBulkCreate: async (users) => await hashPasswordBulk(users),
       beforeUpdate: async (user) => {
-        if (user.changed("password")) {
+        if (user.changed('password')) {
           await hashPassword(user);
         }
       },
     },
     defaultScope: {
-      attributes:{exclude: ['password', 'verificationToken', 'refreshToken', 'recoveryToken']}
+      attributes: {
+        exclude: [
+          'password',
+          'emailVerificationToken',
+          'recoveryToken',
+          'refreshToken',
+        ],
+      },
     },
     scopes: {
-      withPassword: {
-        attributes: { include: ['password'] },
+      withSensitiveData: {
+        attributes: {
+          include: [
+            'password',
+            'emailVerificationToken',
+            'recoveryToken',
+            'refreshToken',
+          ],
+        },
       },
     },
   }
 );
 
-//Hooks
+// Hooks
 const hashPassword = async (user) => {
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
@@ -88,6 +122,14 @@ const hashPassword = async (user) => {
 const hashPasswordBulk = async (users) => {
   for (const user of users) {
     await hashPassword(user);
+  }
+};
+
+const verifyOnetoOneAssociation = async (user) => {
+  const owner = await user.getOwner();
+  const company = await user.getCompany();
+  if (owner && company) {
+    throw new Error('The user is already associated');
   }
 };
 

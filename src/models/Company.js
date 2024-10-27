@@ -1,112 +1,123 @@
-import { DataTypes } from "sequelize";
-import bcrypt from "bcrypt";
-import db from "../config/db.js";
+import { DataTypes } from 'sequelize';
+import db from '../config/db.js';
+import { ValidationError } from '../errors/index.js';
 
 const Company = db.define(
-  "Company",
+  'Company',
   {
-    companyId: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
     legalId: {
       type: DataTypes.STRING,
+      primaryKey: true,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: {
+          args: [1, 255],
+        },
+      },
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+    description: {
+      type: DataTypes.TEXT('long'),
+      allowNull: true,
+      validate: {
+        notEmpty: true,
+      },
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    mission: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
-    role:{
-      type: DataTypes.ENUM("company"),
-      allowNull: false,
-      defaultValue: "company",
-    },
-    phone: {
-      type: DataTypes.JSON,
-      allowNull: false,
+    vision: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     address: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+        isJSON: (value) => {
+          try {
+            const string = JSON.stringify(value);
+            JSON.parse(string);
+          } catch (error) {
+            throw new ValidationError(
+              'location must be a valid JSON object.',
+              location
+            );
+          }
+        },
+        validAddress(value) {
+          const requiredKeys = [
+            'province',
+            'canton',
+            'district',
+            'streetDetails',
+          ];
+          for (const key of requiredKeys) {
+            if (!(key in value)) {
+              throw new ValidationError(
+                `address must contain '${key}'.`,
+                address
+              );
+            }
+          }
+        },
+      },
     },
     pricing: {
-        type: DataTypes.JSON,
-        allowNull: false,
-    },
-    isEmailVerified: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.JSON,
       allowNull: false,
-      defaultValue: false,
+      validate: {
+        notEmpty: true,
+        isJSON: (value) => {
+          try {
+            const string = JSON.stringify(value);
+            JSON.parse(string);
+          } catch (error) {
+            throw new ValidationError(
+              'pricing must be a valid JSON object.',
+              pricing
+            );
+          }
+        },
+        validPricing(value) {
+          const requiredKeys = ['plan', 'billingCycle', 'billingDate'];
+          for (const key of requiredKeys) {
+            if (!(key in value)) {
+              throw new ValidationError(
+                `pricing must contain the key '${key}'.`,
+                pricing
+              );
+            }
+          }
+        },
+      },
     },
-    verificationToken: {
-      type: DataTypes.STRING,
+    rating: {
+      type: DataTypes.NUMBER,
       allowNull: true,
-    },
-    accessToken: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    recoveryToken: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      validate: {
+        isNumeric: true,
+        min: {
+          args: [0],
+        },
+        max: {
+          args: [5],
+        },
+      },
     },
   },
   {
     timestamps: true,
-    hooks: {
-      beforeCreate: async (company) => await hashPassword(company),
-      beforeBulkCreate: async (companies) => await hashPasswordBulk(companies),
-      beforeUpdate: async (company) => {
-        if (company.changed("password")) {
-          await hashPassword(company);
-        }
-      },
-    },
-    defaultScope: {
-      attributes:{exclude: ['password', 'verificationToken', 'refreshToken', 'recoveryToken']}
-    },    
-    scopes: {
-      withPassword: {
-        attributes: { include: ['password'] },
-      },
-    },
   }
 );
-
-//hooks
-
-const hashPassword = async (company) => {
-  const salt = await bcrypt.genSalt(10);
-  company.password = await bcrypt.hash(company.password, salt);
-};
-
-const hashPasswordBulk = async (companies) => {
-  for (const company of companies) {
-    await hashPassword(company);
-  }
-};
-
-/**
- * Validates the provided password against the user's password.
- * @param {string} password - The password to validate.
- * @returns {Promise<boolean>} - A promise that resolves to true if the password is valid, false otherwise.
- */
-Company.prototype.validatePassword = function (password) {
-  if (!this.password || !password) {
-    return false;
-  }
-  return bcrypt.compare(password, this.password);
-};
 
 export default Company;
