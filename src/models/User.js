@@ -44,7 +44,7 @@ const User = db.define(
           } catch (error) {
             throw new ValidationError(
               'The contacts field must be a valid JSON object.',
-              contacts
+              'contacts'
             );
           }
         },
@@ -56,7 +56,7 @@ const User = db.define(
           ) {
             throw new ValidationError(
               "The contacts field must be an object with 'emails' and 'numbers' arrays.",
-              contacts
+              'contacts'
             );
           }
         },

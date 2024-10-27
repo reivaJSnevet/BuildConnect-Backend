@@ -9,51 +9,50 @@
  *          type: string
  *          format: uuid
  *          description: User ID generated automatically
- *        name:
- *          type: string
- *          description: User name
- *        lastName:
- *          type: string
- *          description: User last name
- *        lastName2:
- *          type: string
- *          description: User second last name
- *        phone:
- *          type: string
- *          description: User phone number
  *        email:
  *          type: string
+ *          format: email
  *          description: User email
  *        password:
  *          type: string
- *          description: User password
+ *          description: User password, must be at least 8 characters
  *        role:
  *          type: string
- *          description: User role (admin, user) automatically set to user
- *        isEmailVerified:
- *          type: boolean
- *          description: User email verification status
+ *          enum: [owner, company, admin]
+ *          description: User role, one of "owner", "company", or "admin"
+ *        contacts:
+ *          type: object
+ *          properties:
+ *            emails:
+ *              type: array
+ *              items:
+ *                type: string
+ *                format: email
+ *              description: List of user's email contacts
+ *            numbers:
+ *              type: array
+ *              items:
+ *                type: string
+ *              description: List of user's phone contacts
+ *          description: JSON object containing lists of user's email and phone contacts
  *        emailVerificationToken:
  *          type: string
- *          description: User email verification token
+ *          description: Token used for email verification, stored as JWT
  *        recoveryToken:
  *          type: string
- *          description: User recovery token
- *        accessToken:
+ *          description: Token used for account recovery, stored as JWT
+ *        refreshToken:
  *          type: string
- *          description: User access token 
+ *          description: Token used for refreshing authentication sessions, stored as JWT
  *      required:
- *        - name
- *        - lastName
- *        - lastName2
- *        - phone
  *        - email
  *        - password
+ *        - role
+ *        - contacts
  *      example:
- *        name: John
- *        lastName: Doe
- *        lastName2: Smith
- *        phone: 1234567890
- *        email: a@example.com
- *        password: password
+ *        email: example@example.com
+ *        role: owner
+ *        contacts: 
+ *          emails: ["contact@example.com"]
+ *          numbers: ["1234567890"]
  */

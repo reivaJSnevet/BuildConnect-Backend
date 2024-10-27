@@ -1,98 +1,60 @@
-import userService from "../services/userService.js";
+import userService from '../services/userService.js';
 
 const userController = {
-  create: async (req, res) => {
-    try {
-      const newUser = req.body;
-      const user = await userService.create(newUser);
-      res.status(201).json(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+	create: async (req, res, next) => {
+		try {
+			const { id, email, password, role, contacts } = req.body;
+			const newUser = { id, email, password, role, contacts };
 
-  getAll: async (req, res) => {
-    try {
-      const users = await userService.getAll();
-      res.status(200).json(users);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+			const user = await userService.create(newUser);
 
-  getById: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const user = await userService.getById(id);
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+			res.status(201).json(user);
+		} catch (error) {
+			next(error);
+		}
+	},
 
-  update: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const updatedUser = req.body;
-      const user = await userService.update(id, updatedUser);
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+	getAll: async (req, res, next) => {
+		try {
+			const users = await userService.getAll();
+			res.status(200).json(users);
+		} catch (error) {
+			next(error);
+		}
+	},
 
-  delete: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const user = await userService.delete(id);
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+	getById: async (req, res, next) => {
+		try {
+			const { id } = req.params;
+			const user = await userService.getById(id);
+			res.status(200).json(user);
+		} catch (error) {
+			next(error);
+		}
+	},
 
-  addPermission: async (req, res) => {
-    try {
-      const { userId, companyId } = req.params;
-      const user = await userService.addPermission(userId, companyId);
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+	update: async (req, res, next) => {
+		try {
+			const { id } = req.params;
+      const { email, contacts } = req.body;
+      const newValues = { email, contacts };
 
-  removePermission: async (req, res) => {
-    try {
-      const { userId, companyId } = req.params;
-      const user = await userService.removePermission(userId, companyId);
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+			const user = await userService.update(id, newValues);
+			res.status(200).json(user);
+		} catch (error) {
+			next(error);
+		}
+	},
 
-  addRating: async (req, res) => {
-    try {
-      const { userId } = req.params;
-      const { companyId, score } = req.body;
-      const user = await userService.addRating(userId, companyId, score);
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
-
-  updateRating: async (req, res) => {
-    try {
-      const { userId } = req.params;
-      const { companyId, score } = req.body;
-      const user = await userService.updateRating(userId, companyId, score);
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
-
+	delete: async (req, res, next) => {
+		try {
+			const { id } = req.params;
+			const user = await userService.delete(id);
+			res.status(200).json(user);
+		} catch (error) {
+			next(error);
+		}
+	},
 };
 
 export default userController;
