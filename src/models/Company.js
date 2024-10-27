@@ -102,7 +102,7 @@ const Company = db.define(
       },
     },
     rating: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.FLOAT,
       allowNull: true,
       validate: {
         isNumeric: true,
