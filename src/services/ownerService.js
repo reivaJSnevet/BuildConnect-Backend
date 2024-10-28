@@ -7,8 +7,8 @@ const ownerService = {
         const t = await db.transaction();
         try {
 
-            if (newOwner.role === 'admin') {
-                throw new ForbiddenError('create an admin user', 'Admin users cannot be created', 'N/A');
+            if (newOwner.role !== 'owner') {
+                throw new ValidationError('Role must be owner', newOwner.role);
             }
 
             const owner = await User.create(newOwner, { include: Owner, transaction: t });
