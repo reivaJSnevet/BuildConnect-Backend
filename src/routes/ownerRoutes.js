@@ -9,7 +9,7 @@ ownerRouter.get("/owners/:id", ownerController.getById);
 ownerRouter.put("/owners/:id", ownerController.update);
 ownerRouter.delete("/owners/:id", ownerController.delete);
 
-ownerRouter.post("/owners/:id/addRating", ownerController.addRating);
-ownerRouter.put("/owners/:id/updateRating", ownerController.updateRating);
+ownerRouter.post("/owners/:id/Rating", ownerController.addRating);
+ownerRouter.put("/owners/:id/Rating", ownerController.updateRating);
 
 export default ownerRouter;
