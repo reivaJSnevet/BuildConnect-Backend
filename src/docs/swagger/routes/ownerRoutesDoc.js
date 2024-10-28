@@ -182,8 +182,6 @@
  *                 message:
  *                   type: string
  *                   example: "Rating added successfully"
- *                 owner:
- *                   $ref: '#/components/schemas/User'
  *       '404':
  *         description: Owner not found
  *         content:
@@ -236,8 +234,6 @@
  *                 message:
  *                   type: string
  *                   example: "Rating updated successfully"
- *                 owner:
- *                   $ref: '#/components/schemas/User'
  *       '404':
  *         description: Owner not found
  *         content:

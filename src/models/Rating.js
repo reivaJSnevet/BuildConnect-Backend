@@ -39,13 +39,14 @@ const Rating = db.define(
 //Hooks
 const calculateRating = async (rating) => {
   try {
-    const company = await Company.findByPk(rating.CompanyId);
+
+    const company = await Company.findByPk(rating.CompanyLegalId);
     if (!company) {
-      throw new NotFoundError('Company', rating.CompanyId);
+      throw new NotFoundError('Company', rating.CompanyLegalId);
     }
 
     const ratings = await Rating.findAll({
-      where: { CompanyId: rating.CompanyId },
+      where: { CompanyLegalId: rating.CompanyLegalId },
     });
 
     if (ratings.length === 0) {
@@ -60,7 +61,7 @@ const calculateRating = async (rating) => {
     await company.save();
 
   } catch (error) {
-    console.error("Error calculating rating:", error.message);
+    throw error;
   }
 };
 

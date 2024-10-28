@@ -97,18 +97,29 @@ const ownerService = {
             const user = await User.findByPk(id, {
                 include: Owner,
             });
-
             if (!user || !user.Owner) {
                 throw new NotFoundError('User', id);
             }
 
-            const company = await Company.findByPk(companyId);
-            if (!company) {
+            const company = await User.findByPk(companyId, {
+                include: Company,
+            });
+            if (!company || !company.Company) {
                 throw new NotFoundError('Company', companyId);
             }
 
-            await user.Owner.addRating(company, { through: { score } });
-            return user;
+            const hasPermission = await user.Owner.hasPermission(company.Company.legalId);
+            if (!hasPermission) {
+                throw new ValidationError('User does not have permission to rate this company', 'companyId');
+            }
+
+            const hasRating = await user.Owner.hasRating(company.Company.legalId);
+            if (hasRating) {
+                throw new ValidationError('User has already rated this company', 'companyId');
+            }
+
+            await user.Owner.addRating(company.Company.legalId, { through: { score } });
+            return { message: 'Rating added successfully' };
         } catch (error) {
             throw error;
         }
@@ -124,15 +135,17 @@ const ownerService = {
                 throw new NotFoundError('User', id);
             }
 
-            const company = await Company.findByPk(companyId);
+            const company = await User.findByPk(companyId, {
+                include: Company,
+            });
             if (!company) {
                 throw new NotFoundError('Company', companyId);
             }
 
             const rating = await Rating.findOne({
                 where: {
-                    ownerId: id,
-                    companyId,
+                    OwnerId: user.Owner.id,
+                    CompanyLegalId: company.Company.legalId,
                 },
             });
 
@@ -143,7 +156,7 @@ const ownerService = {
             rating.score = score;
             await rating.save();
 
-            return user;
+            return { message: 'Rating updated successfully' };
         } catch (error) {
             throw error;
         }

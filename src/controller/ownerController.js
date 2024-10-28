@@ -57,8 +57,8 @@ const ownerController = {
         try {
             const { id } = req.params;
             const { companyId, score } = req.body;
-            const user = await ownerService.addRating(id, companyId, score);
-            res.status(200).json(user);
+            const message = await ownerService.addRating(id, companyId, score);
+            res.status(200).json(message);
         } catch (error) {
             next(error);
         }
@@ -68,8 +68,8 @@ const ownerController = {
         try {
             const { id } = req.params;
             const { companyId, score } = req.body;
-            const user = await ownerService.updateRating(id, companyId, score);
-            res.status(200).json(user);
+            const message = await ownerService.updateRating(id, companyId, score);
+            res.status(200).json(message);
         } catch (error) {
             next(error);
         }
