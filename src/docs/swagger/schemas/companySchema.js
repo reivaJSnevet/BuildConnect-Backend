@@ -2,73 +2,108 @@
  * @swagger
  * components:
  *   schemas:
- *     Company:
+ *     UserCompany:
  *       type: object
  *       properties:
- *         companyId:
+ *         id:
  *           type: string
  *           format: uuid
- *           description: ID autogenerado de la compañía
- *         legalId:
- *           type: string
- *           description: ID legal de la compañía
- *         name:
- *           type: string
- *           description: Nombre de la compañía
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *         email:
  *           type: string
  *           format: email
- *           description: Correo electrónico de la compañía
+ *           example: "example@example.com"
  *         password:
  *           type: string
- *           description: Contraseña de la compañía
+ *           minLength: 8
+ *           maxLength: 255
+ *           example: "securePassword123"
  *         role:
  *           type: string
- *           enum: [company]
- *           description: Rol de la compañía
- *         phone:
+ *           enum: [owner, company, admin]
+ *           example: "company"
+ *         contacts:
  *           type: object
- *           description: Información de contacto telefónico
- *         address:
- *           type: string
- *           description: Dirección de la compañía
- *         pricing:
+ *           properties:
+ *             emails:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 format: email
+ *                 example: "contact@example.com"
+ *             numbers:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: "1234567890"
+ *           required:
+ *             - emails
+ *             - numbers
+ *           example:
+ *             emails: ["contact@example.com"]
+ *             numbers: ["1234567890"]
+ *         Company:
  *           type: object
- *           description: Información sobre precios
- *         isEmailVerified:
- *           type: boolean
- *           description: Estado de verificación del correo electrónico
- *         verificationToken:
- *           type: string
- *           description: Token de verificación de correo
- *         accessToken:
- *           type: string
- *           description: Token de acceso
- *         recoveryToken:
- *           type: string
- *           description: Token de recuperación
+ *           properties:
+ *             legalId:
+ *               type: string
+ *               example: "123-456-789"
+ *             name:
+ *               type: string
+ *               minLength: 1
+ *               maxLength: 255
+ *               example: "Example Company"
+ *             description:
+ *               type: string
+ *               example: "This is an example company description."
+ *             mission:
+ *               type: string
+ *               example: "To provide exemplary services to our clients."
+ *             vision:
+ *               type: string
+ *               example: "To be a leader in our industry."
+ *             address:
+ *               type: object
+ *               properties:
+ *                 province:
+ *                   type: string
+ *                   example: "San José"
+ *                 canton:
+ *                   type: string
+ *                   example: "Escazú"
+ *                 district:
+ *                   type: string
+ *                   example: "San Rafael"
+ *                 streetDetails:
+ *                   type: string
+ *                   example: "123 Main St."
+ *               required:
+ *                 - province
+ *                 - canton
+ *                 - district
+ *                 - streetDetails
+ *             pricing:
+ *               type: object
+ *               properties:
+ *                 plan:
+ *                   type: string
+ *                   example: "Premium"
+ *                 billingCycle:
+ *                   type: string
+ *                   example: "Monthly"
+ *                 billingDate:
+ *                   type: string
+ *                   format: date
+ *                   example: "2024-10-01"
+ *               required:
+ *                 - plan
+ *                 - billingCycle
+ *                 - billingDate
  *       required:
- *         - companyId
- *         - legalId
- *         - name
+ *         - id
  *         - email
  *         - password
- *         - phone
- *         - address
- *         - pricing
- *       example:
- *         companyId: "1e4b2f3a-23f1-4f9b-bfae-123456789abc"
- *         legalId: "123456789"
- *         name: "Constructora XYZ"
- *         email: "contacto@constructora.xyz"
- *         password: "securePassword123"
- *         role: "company"
- *         phone: {"mobile": "1234567890", "office": "0987654321"}
- *         address: "Av. Central, San José, Costa Rica"
- *         pricing: {"project": 5000, "consultation": 200}
- *         isEmailVerified: false
- *         verificationToken: "verificationToken123"
- *         accessToken: "accessToken123"
- *         recoveryToken: "recoveryToken123"
- *
+ *         - role
+ *         - contacts
+ *         - Company
  */
