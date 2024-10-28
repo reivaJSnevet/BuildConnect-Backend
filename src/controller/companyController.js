@@ -1,73 +1,75 @@
 import companyService from "../services/companyService.js";
 
 const companyController = {
-    create: async (req, res) => {
+    create: async (req, res, next) => {
         try {
         const newCompany = req.body;
         const company = await companyService.create(newCompany);
+        
         res.status(201).json(company);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    getAll: async (req, res) => {
+    getAll: async (req, res, next) => {
         try {
         const companies = await companyService.getAll();
         res.status(200).json(companies);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    getById: async (req, res) => {
+    getById: async (req, res, next) => {
         try {
         const { id } = req.params;
         const company = await companyService.getById(id);
         res.status(200).json(company);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    update: async (req, res) => {
+    update: async (req, res, next) => {
         try {
         const { id } = req.params;
-        const updatedCompany = req.body;
-        const company = await companyService.update(id, updatedCompany);
+        const newValues = req.body;
+
+        const company = await companyService.update(id, newValues);
         res.status(200).json(company);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    delete: async (req, res) => {
+    delete: async (req, res, next) => {
         try {
         const { id } = req.params;
-        const company = await companyService.delete(id);
-        res.status(200).json(company);
+        const message = await companyService.delete(id);
+        res.status(200).json({message});
         } catch (error) {
-        res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    addBookmark: async (req, res) => {
+    addBookmark: async (req, res, next) => {
         try {
-        const { companyId, projectId } = req.params;
-        const company = await companyService.addBookmark(companyId, projectId);
+        const { id, projectId } = req.params;
+        const company = await companyService.addBookmark(id, projectId);
         res.status(200).json(company);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    removeBookmark: async (req, res) => {
+    removeBookmark: async (req, res, next) => {
         try {
-        const { companyId, projectId } = req.params;
-        const company = await companyService.removeBookmark(companyId, projectId);
+        const { id, projectId } = req.params;
+        const company = await companyService.removeBookmark(id, projectId);
         res.status(200).json(company);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 };
