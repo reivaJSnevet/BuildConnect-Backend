@@ -82,7 +82,7 @@ const ownerService = {
     delete: async id => {
         try {
             const owner = await User.findByPk(id);
-            if (!owner) {
+            if (!owner || !owner.Owner) {
                 throw new NotFoundError('User', id);
             }
             await owner.destroy();
@@ -107,7 +107,7 @@ const ownerService = {
                 throw new NotFoundError('Company', companyId);
             }
 
-            user.Owner.addRating(company, { through: { score } });
+            await user.Owner.addRating(company, { through: { score } });
             return user;
         } catch (error) {
             throw error;
