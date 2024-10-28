@@ -6,14 +6,8 @@ import sendVerificationEmail from '../utils/emails/verificationEmail.js';
 const userService = {
     create: async newUser => {
         try {
-            if (newUser.role === 'admin') {
-                throw new ForbiddenError('create an admin user', 'Admin users cannot be created', 'N/A');
-            }
 
-            newUser.emailVerificationToken = generateEmailToken();
             const user = await User.create(newUser);
-
-            /* await sendVerificationEmail(user.email, user.emailVerificationToken); */
 
             delete user.dataValues.password;
             delete user.dataValues.emailVerificationToken;

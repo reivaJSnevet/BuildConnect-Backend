@@ -2,6 +2,8 @@ import { DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
 import db from '../config/db.js';
 import { ValidationError } from '../errors/index.js';
+import { generateEmailToken } from '../utils/tokens/emailVerifyToken.js';
+import sendVerificationEmail from '../utils/emails/verificationEmail.js';
 
 const User = db.define(
   'User',
@@ -87,6 +89,11 @@ const User = db.define(
           await hashPassword(user);
         }
       },
+      afterCreate: async (user) => {
+        if (user.role !== 'admin') {
+          await VerificationEmail(user);
+        }
+      }
     },
     defaultScope: {
       attributes: {
@@ -122,6 +129,16 @@ const hashPassword = async (user) => {
 const hashPasswordBulk = async (users) => {
   for (const user of users) {
     await hashPassword(user);
+  }
+};
+
+const VerificationEmail = async (user) => {
+  try {
+    user.emailVerificationToken = generateEmailToken();
+    await user.save();
+    await sendVerificationEmail(user.email, user.emailVerificationToken);
+  } catch (error) {
+    throw error;
   }
 };
 

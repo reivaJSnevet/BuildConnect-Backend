@@ -6,6 +6,11 @@ const ownerService = {
     create: async newOwner => {
         const t = await db.transaction();
         try {
+
+            if (newOwner.role === 'admin') {
+                throw new ForbiddenError('create an admin user', 'Admin users cannot be created', 'N/A');
+            }
+
             const owner = await User.create(newOwner, { include: Owner, transaction: t });
             await t.commit();
 
