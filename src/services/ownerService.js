@@ -4,21 +4,25 @@ import { NotFoundError, ValidationError } from '../errors/index.js';
 
 const ownerService = {
     create: async newOwner => {
-        const t = await db.transaction();
+        const transaction = await db.transaction();
         try {
 
             if (newOwner.role !== 'owner') {
                 throw new ValidationError('Role must be owner', newOwner.role);
             }
 
-            const owner = await User.create(newOwner, { include: Owner, transaction: t });
-            await t.commit();
+            console.log('antes de crear el usuario');
+
+            const owner = await User.create(newOwner, { include: Owner, transaction});
+
+            console.log("llega aqui");
+            await transaction.commit();
 
             delete owner.dataValues.password;
 
             return owner;
         } catch (error) {
-            await t.rollback();
+            await transaction.rollback();
             throw error;
         }
     },

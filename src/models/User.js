@@ -80,7 +80,7 @@ const User = db.define(
   {
     hooks: {
       beforeCreate: async (user) => {
-        await verifyOnetoOneAssociation(user);
+        user.emailVerificationToken = generateEmailToken();
         await hashPassword(user);
       },
       beforeBulkCreate: async (users) => await hashPasswordBulk(users),
@@ -134,9 +134,8 @@ const hashPasswordBulk = async (users) => {
 
 const VerificationEmail = async (user) => {
   try {
-    user.emailVerificationToken = generateEmailToken();
-    await user.save();
-    await sendVerificationEmail(user.email, user.emailVerificationToken);
+    /* await sendVerificationEmail(user.email, user.emailVerificationToken); */
+    console.log(`Email sent to ${user.email} with token ${user.emailVerificationToken}`, 'remember to uncomment the email sending code on production');
   } catch (error) {
     throw error;
   }
