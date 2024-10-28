@@ -26,10 +26,16 @@ const companyService = {
     
     getAll: async () => {
         try {
-        const companies = await User.findAll(
-            {
-            include: Company,
-        });
+          const companies =
+            await User.findAll(
+              {
+                include:
+                {
+                  model: Company,
+                  required: true,
+                },
+              },
+            );
         return companies;
         } catch (error) {
         throw error;

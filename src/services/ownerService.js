@@ -27,9 +27,9 @@ const ownerService = {
     getAll: async () => {
         try {
             const owners = await User.findAll({
-                include: Owner,
-                attributes: {
-                    exclude: ['password'],
+                include: {
+                    model: Owner,
+                    required: true,
                 },
             });
             return owners;
