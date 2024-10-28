@@ -1,20 +1,13 @@
 /**
  * @swagger
+ * tags:
+ *   - name: Owners
+ *     description: Operations related to owners.
+ */
+
+/**
+ * @swagger
  * /owners:
- *   get:
- *     summary: Get all owners
- *     tags: [Owners]
- *     responses:
- *       200:
- *         description: List of owners retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/UserResponse' # Cambiado a UserResponse
- *       500:
- *         description: Internal server error
  *   post:
  *     summary: Create a new owner
  *     tags: [Owners]
@@ -23,53 +16,93 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserInput' # Cambiado a UserInput
+ *             $ref: '#/components/schemas/UserOwner'
  *     responses:
- *       201:
+ *       '201':
  *         description: Owner created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/UserResponse' # Cambiado a UserResponse
- *       400:
- *         description: Bad request, incomplete owner data
- *       500:
- *         description: Internal server error
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Owner created successfully"
+ *                 owner:
+ *                   $ref: '#/components/schemas/User'
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "The provided data is invalid"
+ */
+
+/**
+ * @swagger
+ * /owners:
+ *   get:
+ *     summary: Get all owners
+ *     tags: [Owners]
+ *     responses:
+ *       '200':
+ *         description: List of owners
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/UserOwner'
  */
 
 /**
  * @swagger
  * /owners/{id}:
  *   get:
- *     summary: Get an owner by their id
+ *     summary: Get an owner by ID
  *     tags: [Owners]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: The id of the owner
+ *         description: ID of the owner
  *         schema:
  *           type: string
  *           format: uuid
  *     responses:
- *       200:
- *         description: Owner retrieved successfully
+ *       '200':
+ *         description: Owner found
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/UserResponse' # Cambiado a UserResponse
- *       404:
+ *               $ref: '#/components/schemas/UserOwner'
+ *       '404':
  *         description: Owner not found
- *       500:
- *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Owner not found"
+ */
+
+/**
+ * @swagger
+ * /owners/{id}:
  *   put:
- *     summary: Update an owner by their id
+ *     summary: Update an owner by ID
  *     tags: [Owners]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: The id of the owner
+ *         description: ID of the owner
  *         schema:
  *           type: string
  *           format: uuid
@@ -78,51 +111,48 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserInput' # Cambiado a UserInput
+ *             $ref: '#/components/schemas/UserOwner'
  *     responses:
- *       200:
+ *       '200':
  *         description: Owner updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/UserResponse' # Cambiado a UserResponse
- *       400:
- *         description: Bad request, incomplete owner data
- *       404:
+ *       '400':
+ *         description: Bad request
+ *       '404':
  *         description: Owner not found
- *       500:
- *         description: Internal server error
- *   delete:
- *     summary: Delete an owner by their id
- *     tags: [Owners]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The id of the owner
- *         schema:
- *           type: string
- *           format: uuid
- *     responses:
- *       200:
- *         description: Owner deleted successfully
- *       404:
- *         description: Owner not found
- *       500:
- *         description: Internal server error
  */
 
 /**
  * @swagger
- * /owners/{ownerId}/addRating:
- *   post:
- *     summary: Add a rating for an owner
+ * /owners/{id}:
+ *   delete:
+ *     summary: Delete an owner by ID
  *     tags: [Owners]
  *     parameters:
- *       - in: path
- *         name: ownerId
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: The ID of the owner
+ *         description: ID of the owner
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '204':
+ *         description: Owner deleted successfully
+ *       '404':
+ *         description: Owner not found
+ */
+
+/**
+ * @swagger
+ * /owners/{id}/Rating:
+ *   post:
+ *     summary: Add a rating to an owner
+ *     tags: [Owners]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the owner
  *         schema:
  *           type: string
  *           format: uuid
@@ -135,38 +165,48 @@
  *             properties:
  *               companyId:
  *                 type: string
- *                 format: uuid
- *                 description: The ID of the company giving the rating
+ *                 description: ID of the company providing the rating.
+ *                 example: "company-uuid-1234"
  *               score:
  *                 type: number
- *                 description: The rating score given to the owner
- *                 example: 4.5
+ *                 description: Rating score to add (e.g., 1 to 5).
+ *                 example: 4
  *     responses:
- *       200:
+ *       '200':
  *         description: Rating added successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/UserResponse' # Cambiado a UserResponse
- *       400:
- *         description: Bad request, invalid or missing data
- *       404:
- *         description: Owner or company not found
- *       500:
- *         description: Internal server error
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Rating added successfully"
+ *                 owner:
+ *                   $ref: '#/components/schemas/User'
+ *       '404':
+ *         description: Owner not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Owner not found"
  */
 
 /**
  * @swagger
- * /owners/{ownerId}/updateRating:
+ * /owners/{id}/Rating:
  *   put:
- *     summary: Update an existing rating for an owner
+ *     summary: Update an owner's rating
  *     tags: [Owners]
  *     parameters:
- *       - in: path
- *         name: ownerId
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: The ID of the owner
+ *         description: ID of the owner
  *         schema:
  *           type: string
  *           format: uuid
@@ -179,24 +219,33 @@
  *             properties:
  *               companyId:
  *                 type: string
- *                 format: uuid
- *                 description: The ID of the company giving the rating
+ *                 description: ID of the company associated with the rating.
+ *                 example: "company-uuid-1234"
  *               score:
  *                 type: number
- *                 description: The new rating score to be updated
- *                 example: 3.8
+ *                 description: New rating score to update (e.g., 1 to 5).
+ *                 example: 5
  *     responses:
- *       200:
+ *       '200':
  *         description: Rating updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/UserResponse' # Cambiado a UserResponse
- *       400:
- *         description: Bad request, invalid or missing data
- *       404:
- *         description: Owner or company not found
- *       500:
- *         description: Internal server error
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Rating updated successfully"
+ *                 owner:
+ *                   $ref: '#/components/schemas/User'
+ *       '404':
+ *         description: Owner not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Owner not found"
  */
-

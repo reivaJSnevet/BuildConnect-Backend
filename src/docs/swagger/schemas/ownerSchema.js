@@ -2,91 +2,33 @@
  * @swagger
  * components:
  *   schemas:
- *     OwnerAttributes:
- *       type: object
- *       properties:
- *         name:
- *           type: string
- *           description: First name of the owner
- *         lastname:
- *           type: string
- *           description: Last name of the owner
- *         lastname2:
- *           type: string
- *           description: Second last name of the owner
- *       required:
- *         - name
- *         - lastname
- *         - lastname2
- *       example:
- *         name: John
- *         lastname: Doe
- *         lastname2: Smith
- *
- *     UserInput:
- *       type: object
- *       properties:
- *         email:
- *           type: string
- *           format: email
- *           description: User email
- *         password:
- *           type: string
- *           description: User password, must be at least 8 characters
- *         role:
- *           type: string
- *           enum: [owner, company, admin]
- *           description: User role, one of "owner", "company", or "admin"
- *         contacts:
- *           type: object
- *           properties:
- *             emails:
- *               type: array
- *               items:
- *                 type: string
- *                 format: email
- *               description: List of user's email contacts
- *             numbers:
- *               type: array
- *               items:
- *                 type: string
- *               description: List of user's phone contacts
- *           description: JSON object containing lists of user's email and phone contacts
- *         Owner:
- *           $ref: '#/components/schemas/OwnerAttributes'
- *           description: Additional details if user is an owner
- *       required:
- *         - email
- *         - password
- *         - role
- *         - contacts
- *       example:
- *         email: example@example.com
- *         password: examplePassword
- *         role: owner
- *         contacts:
- *           emails: ["contact@example.com"]
- *           numbers: ["1234567890"]
- *         Owner:
- *           name: John
- *           lastname: Doe
- *           lastname2: Smith
- *
- *     UserResponse:
+ *     UserOwner:
  *       type: object
  *       properties:
  *         id:
  *           type: string
  *           format: uuid
- *           description: User ID generated automatically
+ *           description: Unique identifier for the user.
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *         email:
  *           type: string
  *           format: email
- *           description: User email
+ *           description: User's email address. Must be unique.
+ *           example: "example@example.com"
+ *         password:
+ *           type: string
+ *           minLength: 8
+ *           maxLength: 255
+ *           description: User's password, must be at least 8 characters long.
+ *           example: "securePassword123"
  *         role:
  *           type: string
- *           enum: [owner, company, admin]
- *           description: User role
+ *           enum:
+ *             - owner
+ *             - company
+ *             - admin
+ *           description: Role of the user in the system.
+ *           example: owner
  *         contacts:
  *           type: object
  *           properties:
@@ -95,30 +37,34 @@
  *               items:
  *                 type: string
  *                 format: email
- *               description: List of user's email contacts
+ *               description: List of contact email addresses.
+ *               example: ["contact@example.com"]
  *             numbers:
  *               type: array
  *               items:
  *                 type: string
- *               description: List of user's phone contacts
- *           description: JSON object containing lists of user's email and phone contacts
+ *               description: List of contact phone numbers.
+ *               example: ["1234567890"]
  *         Owner:
- *           $ref: '#/components/schemas/OwnerAttributes'
- *           description: Additional details if user is an owner
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *               description: First name of the owner.
+ *               example: "John"
+ *             lastname:
+ *               type: string
+ *               description: Owner's first surname.
+ *               example: "Doe"
+ *             lastname2:
+ *               type: string
+ *               description: Owner's second surname.
+ *               example: "Smith"
  *       required:
  *         - id
  *         - email
+ *         - password
  *         - role
  *         - contacts
- *       example:
- *         id: 123e4567-e89b-12d3-a456-426614174000
- *         email: example@example.com
- *         role: owner
- *         contacts:
- *           emails: ["contact@example.com"]
- *           numbers: ["1234567890"]
- *         Owner:
- *           name: John
- *           lastname: Doe
- *           lastname2: Smith
+ *         - Owner
  */
