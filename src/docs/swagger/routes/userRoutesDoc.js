@@ -47,9 +47,10 @@
  *       - in: path
  *         name: id
  *         required: true
- *         description: The id of the user
+ *         description: The id of the user (UUID format)
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
  *       200:
  *         description: User retrieved successfully
@@ -68,9 +69,10 @@
  *       - in: path
  *         name: id
  *         required: true
- *         description: The id of the user
+ *         description: The id of the user (UUID format)
  *         schema:
  *           type: string
+ *           format: uuid
  *     requestBody:
  *       required: true
  *       content:
@@ -86,6 +88,8 @@
  *               $ref: '#/components/schemas/UserResponse'
  *       400:
  *         description: Bad request, incomplete user data
+ *       404:
+ *         description: User not found
  *       500:
  *         description: Internal server error
  *   delete:
@@ -95,9 +99,10 @@
  *       - in: path
  *         name: id
  *         required: true
- *         description: The id of the user
+ *         description: The id of the user (UUID format)
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
  *       200:
  *         description: User deleted successfully
