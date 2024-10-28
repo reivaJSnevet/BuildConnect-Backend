@@ -34,8 +34,7 @@ const ownerController = {
     update: async (req, res, next) => {
         try {
             const { id } = req.params;
-            const { name, lastname, lastname2 } = req.body;
-            const newValues = { name, lastname, lastname2 };
+            const newValues = req.body;
 
             const owner = await ownerService.update(id, newValues);
             res.status(200).json(owner);

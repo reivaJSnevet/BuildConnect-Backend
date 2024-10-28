@@ -8,17 +8,14 @@ const ownerService = {
         try {
 
             if (newOwner.role !== 'owner') {
-                throw new ValidationError('Role must be owner', newOwner.role);
+                throw new ValidationError('Role must be owner', 'role');
             }
 
-            console.log('antes de crear el usuario');
-
             const owner = await User.create(newOwner, { include: Owner, transaction});
-
-            console.log("llega aqui");
             await transaction.commit();
 
             delete owner.dataValues.password;
+            delete owner.dataValues.emailVerificationToken;
 
             return owner;
         } catch (error) {
@@ -45,11 +42,8 @@ const ownerService = {
         try {
             const owner = await User.findByPk(id, {
                 include: Owner,
-                attributes: {
-                    exclude: ['password'],
-                },
             });
-            if (!owner) {
+            if (!owner || !owner.Owner) {
                 throw new NotFoundError('User', id);
             }
             return owner;
@@ -59,18 +53,28 @@ const ownerService = {
     },
 
     update: async (id, newValues) => {
+        const transaction = await db.transaction();
         try {
-            const user = await User.findByPk(id);
+            const user = await User.findByPk(id, {
+                include: Owner,
+            });
 
-            if (!user) {
+            if (!user || !user.Owner) {
                 throw new NotFoundError('User', id);
             }
 
-            const owner = await user.getOwner();
-            const updatedOwner = await owner.update(newValues);
+            await user.Owner.update(newValues.Owner, { transaction });
+            await user.Owner.save();
 
-            return updatedOwner;
+            await user.update(newValues, { transaction });
+            await user.save();
+
+            await transaction.commit();
+            return await User.findByPk(id, {
+                include: Owner,
+            });
         } catch (error) {
+            await transaction.rollback();
             throw error;
         }
     },
