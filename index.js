@@ -18,7 +18,8 @@ import {
     commentRoutes,
     authRoutes,
     contactRoutes,
-    ownerRoutes
+    ownerRoutes,
+    projectTypeRoutes
 } from './src/routes/index.js';
 import requireJWT from './src/middlewares/requireJWT.js';
 
@@ -52,6 +53,7 @@ app.use("/api", companyRoutes);
 app.use("/api", projectRoutes);
 app.use("/api", commentRoutes);
 app.use("/api", ownerRoutes);
+app.use("/api", projectTypeRoutes);
 
 
 
