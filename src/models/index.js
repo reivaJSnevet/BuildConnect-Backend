@@ -14,7 +14,7 @@ Company.belongsTo(User, { foreignKey: { allowNull: false }, onDelete: 'Cascade' 
 User.hasOne(Company, { foreignKey: { allowNull: false }, onDelete: 'Cascade' });
 
 Owner.hasMany(Project, { foreignKey: { allowNull: false }, onDelete: 'Cascade', as: "projects" });
-Project.belongsTo(Owner, { foreignKey: { allowNull: false }, onDelete: 'Cascade', as: "projects" });
+Project.belongsTo(Owner, { foreignKey: { allowNull: false }, onDelete: 'Cascade', as: "Owner" });
 
 Project.belongsToMany(Category, { through: "project_category", as: "categories" });
 Category.belongsToMany(Project, { through: "project_category", as: "categories" });

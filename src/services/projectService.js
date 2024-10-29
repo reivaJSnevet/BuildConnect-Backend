@@ -1,10 +1,21 @@
-import { Project, Category, User } from '../models/index.js';
+import { Project, Category, User, Owner, ProjectType } from '../models/index.js';
+import { NotFoundError } from '../errors/index.js';
 
 const projectService = {
     create: async (newProject) => {
         try {
-        const project = await Project.create(newProject);
-        return project;
+
+          const owner = await User.findByPk(newProject.UserId, {
+            include: {
+              model: Owner,
+            }
+          });
+          if (!owner || !owner.Owner) {
+            throw new NotFoundError('Owner', newProject.UserId);
+          }
+
+          const project = await owner.Owner.createProject(newProject);
+          return project;
         } catch (error) {
         throw error;
         }
@@ -14,8 +25,8 @@ const projectService = {
         try {
           const projects = await Project.findAll({
             include: [
-              { model: Category, attributes: ['name'] },
-              { model: User, attributes: ['name', 'lastName'] },
+              { model: Category, as: 'categories', through: { attributes: [] } },
+              { model: ProjectType, as: 'types', through: { attributes: [] } },
             ],
           });
         return projects;
@@ -28,12 +39,12 @@ const projectService = {
         try {
         const project = await Project.findByPk(id, {
           include: [
-            { model: Category, attributes: ['name'] },
-            { model: User, attributes: ['name', 'lastName'] },
+            { model: Category, as: 'categories', through: { attributes: [] } },
+            { model: ProjectType, as: 'types', through: { attributes: [] } },
           ],
         });
         if (!project) {
-            throw new Error(`Project not found with id: ${id}`);
+            throw new NotFoundError('Project', id);
         }
         return project;
         } catch (error) {
@@ -44,7 +55,7 @@ const projectService = {
         try {
         const project = await Project.findByPk(id);
         if (!project) {
-            throw new Error(`Project not found with id: ${id}`);
+            throw new NotFoundError('Project', id);
         }
         const updated = await project.update(updatedProject);
         return updated;
@@ -56,7 +67,7 @@ const projectService = {
         try {
         const project = await Project.findByPk(id);
         if (!project) {
-            throw new Error(`Project not found with id: ${id}`);
+            throw new NotFoundError('Project', id);
         }
         await project.destroy();
         return `Project with id: ${id} has been deleted`;

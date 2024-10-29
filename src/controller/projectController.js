@@ -1,53 +1,53 @@
 import projectService from "../services/projectService.js";
 
 const projectController = {
-    create: async (req, res) => {
+    create: async (req, res, next) => {
         try {
         const newProject = req.body;
         const project = await projectService.create(newProject);
         res.status(201).json(project);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
         }
     },
     
-    getAll: async (req, res) => {
+    getAll: async (req, res, next) => {
         try {
         const projects = await projectService.getAll();
         res.status(200).json(projects);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
         }
     },
     
-    getById: async (req, res) => {
+    getById: async (req, res, next) => {
         try {
         const { id } = req.params;
         const project = await projectService.getById(id);
         res.status(200).json(project);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
         }
     },
     
-    update: async (req, res) => {
+    update: async (req, res, next) => {
         try {
         const { id } = req.params;
         const updatedProject = req.body;
         const project = await projectService.update(id, updatedProject);
         res.status(200).json(project);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
         }
     },
     
-    delete: async (req, res) => {
+    delete: async (req, res, next) => {
         try {
         const { id } = req.params;
         const project = await projectService.delete(id);
         res.status(200).json(project);
         } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
         }
     },
     };
