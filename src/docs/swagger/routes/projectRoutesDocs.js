@@ -163,3 +163,179 @@
  *                   type: string
  *                   example: "Project not found"
  */
+
+/**
+ * @swagger
+ * /projects/{id}/categories/{categoryId}:
+ *   post:
+ *     summary: Add a category to a project
+ *     tags: [Projects]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the project
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - name: categoryId
+ *         in: path
+ *         required: true
+ *         description: ID of the category to be added
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Category added to the project successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Category added successfully"
+ *       '404':
+ *         description: Project or category not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project or category not found"
+ */
+
+/**
+ * @swagger
+ * /projects/{id}/categories/{categoryId}:
+ *   delete:
+ *     summary: Remove a category from a project
+ *     tags: [Projects]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the project
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - name: categoryId
+ *         in: path
+ *         required: true
+ *         description: ID of the category to be removed
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Category removed from the project successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Category removed successfully"
+ *       '404':
+ *         description: Project or category not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project or category not found"
+ */
+
+/**
+ * @swagger
+ * /projects/{id}/types/{typeId}:
+ *   post:
+ *     summary: Add a type to a project
+ *     tags: [Projects]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the project
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - name: typeId
+ *         in: path
+ *         required: true
+ *         description: ID of the type to be added
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Type added to the project successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Type added successfully"
+ *       '404':
+ *         description: Project or type not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project or type not found"
+ */
+
+/**
+ * @swagger
+ * /projects/{id}/types/{typeId}:
+ *   delete:
+ *     summary: Remove a type from a project
+ *     tags: [Projects]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the project
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - name: typeId
+ *         in: path
+ *         required: true
+ *         description: ID of the type to be removed
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Type removed from the project successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Type removed successfully"
+ *       '404':
+ *         description: Project or type not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project or type not found"
+ */

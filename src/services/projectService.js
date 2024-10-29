@@ -75,6 +75,75 @@ const projectService = {
         throw error;
         }
     },
+
+    addCategory: async (projectId, categoryId) => {
+      try {
+        const project = await Project.findByPk(projectId);
+        if (!project) {
+          throw new NotFoundError('Project', projectId);
+        }
+        const category = await Category.findByPk(categoryId);
+        if (!category) {
+          throw new NotFoundError('Category', categoryId);
+        }
+        await project.addCategories(category);
+        return { message: 'Category added to the project successfully' };
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    removeCategory: async (projectId, categoryId) => {
+      try {
+        const project = await Project.findByPk(projectId);
+        if (!project) {
+          throw new NotFoundError('Project', projectId);
+        }
+        const category = await Category.findByPk(categoryId);
+        if (!category) {
+          throw new NotFoundError('Category', categoryId);
+        }
+        await project.removeCategories(category);
+        return { message: 'Category removed from the project successfully' };
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    addType: async (projectId, typeId) => {
+      try {
+        const project = await Project.findByPk(projectId);
+        if (!project) {
+          throw new NotFoundError('Project', projectId);
+        }
+        const type = await ProjectType.findByPk(typeId);
+        if (!type) {
+          throw new NotFoundError('Type', typeId);
+        }
+        await project.addTypes(type);
+        return { message: 'Type added to the project successfully' };
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    removeType: async (projectId, typeId) => {
+      try {
+        const project = await Project.findByPk(projectId);
+        if (!project) {
+          throw new NotFoundError('Project', projectId);
+        }
+        const type = await ProjectType.findByPk(typeId);
+        if (!type) {
+          throw new NotFoundError('Type', typeId);
+        }
+        await project.removeTypes(type);
+        return { message: 'Type removed from the project successfully' };
+      } catch (error) {
+        throw error;
+      }
+    },
+
 };
 
 export default projectService;

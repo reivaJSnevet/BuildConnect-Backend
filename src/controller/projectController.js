@@ -50,6 +50,47 @@ const projectController = {
         next(error);
         }
     },
+
+    addCategory: async (req, res, next) => {
+        try {
+        const { id, categoryId } = req.params;
+        const message = await projectService.addCategory(id, categoryId);
+        res.status(200).json(message);
+        } catch (error) {
+        next(error);
+        }
+    },
+
+    removeCategory: async (req, res, next) => {
+        try {
+        const { id, categoryId } = req.params;
+        const message = await projectService.removeCategory(id, categoryId);
+        res.status(200).json(message);
+        } catch (error) {
+        next(error);
+        }
+    },
+
+    addType: async (req, res, next) => {
+        try {
+        const { id, typeId } = req.params;
+        const message = await projectService.addType(id, typeId);
+        res.status(200).json(message);
+        } catch (error) {
+        next(error);
+        }
+    },
+
+    removeType: async (req, res, next) => {
+        try {
+        const { id, typeId } = req.params;
+        const message = await projectService.removeType(id, typeId);
+        res.status(200).json(message);
+        } catch (error) {
+        next(error);
+        }
+      }
+
     };
 
     export default projectController;
