@@ -1,25 +1,23 @@
 /**
  * @swagger
  * components:
- *  schemas:
- *    Category:
- *      type: object
- *      properties:
- *        id:
- *          type: string
- *          format: uuid
- *          description: El ID auto-generado de la categoría
- *        name:
- *          type: string
- *          description: El nombre de la categoría
- *        description:
- *          type: string
- *          description: Una breve descripción de la categoría
- *      required:
- *        - name
- *        - description
- *      example:
- *        id: "abc123-def456-ghi789-jkl012"
- *        name: "Vidrios"
- *        description: "Categoría de productos de vidrio"
+ *   schemas:
+ *     Category:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *           description: Unique identifier for the category
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
+ *         name:
+ *           type: string
+ *           description: Name of the category
+ *           example: "Brick"
+ *           minLength: 1
+ *           maxLength: 255
+ *       required:
+ *         - id
+ *         - name
+ *       additionalProperties: false
  */

@@ -1,75 +1,102 @@
 /**
  * @swagger
+ * tags:
+ *   - name: Categories
+ *     description: Operations related to categories.
+ */
+
+/**
+ * @swagger
+ * /categories:
+ *   post:
+ *     summary: Create a new category
+ *     tags: [Categories]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Category'
+ *     responses:
+ *       '201':
+ *         description: Category created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input data for category"
+ */
+
+/**
+ * @swagger
  * /categories:
  *   get:
- *     summary: Obtiene todas las categorías
+ *     summary: Retrieve a list of all categories
  *     tags: [Categories]
  *     responses:
- *       200:
- *         description: Lista de categorías obtenida correctamente
+ *       '200':
+ *         description: List of categories
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Category'
- *       500:
- *         description: Error interno del servidor
- *   post:
- *     summary: Crea una nueva categoría
- *     tags: [Categories]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Category'
- *     responses:
- *       201:
- *         description: Categoría creada correctamente
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Category'
- *       400:
- *         description: Petición incorrecta, datos de la categoría incompletos
- *       500:
- *         description: Error interno del servidor
  */
 
 /**
  * @swagger
  * /categories/{id}:
  *   get:
- *     summary: Obtiene una categoría por su id
+ *     summary: Retrieve a category by ID
  *     tags: [Categories]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: El id de la categoría
+ *         description: ID of the category
  *         schema:
  *           type: string
  *           format: uuid
  *     responses:
- *       200:
- *         description: Categoría obtenida correctamente
+ *       '200':
+ *         description: Category retrieved successfully
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Category'
- *       404:
- *         description: Categoría no encontrada
- *       500:
- *         description: Error interno del servidor
+ *       '404':
+ *         description: Category not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Category not found"
+ */
+
+/**
+ * @swagger
+ * /categories/{id}:
  *   put:
- *     summary: Actualiza una categoría por su id
+ *     summary: Update a category by ID
  *     tags: [Categories]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: El id de la categoría
+ *         description: ID of the category
  *         schema:
  *           type: string
  *           format: uuid
@@ -80,32 +107,59 @@
  *           schema:
  *             $ref: '#/components/schemas/Category'
  *     responses:
- *       200:
- *         description: Categoría actualizada correctamente
+ *       '200':
+ *         description: Category updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Category'
- *       400:
- *         description: Petición incorrecta, datos de la categoría incompletos
- *       500:
- *         description: Error interno del servidor
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input data for category"
+ *       '404':
+ *         description: Category not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Category not found"
+ */
+
+/**
+ * @swagger
+ * /categories/{id}:
  *   delete:
- *     summary: Elimina una categoría por su id
+ *     summary: Delete a category by ID
  *     tags: [Categories]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: El id de la categoría
+ *         description: ID of the category
  *         schema:
  *           type: string
  *           format: uuid
  *     responses:
- *       200:
- *         description: Categoría eliminada correctamente
- *       404:
- *         description: Categoría no encontrada
- *       500:
- *         description: Error interno del servidor
+ *       '204':
+ *         description: Category deleted successfully
+ *       '404':
+ *         description: Category not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Category not found"
  */
