@@ -1,110 +1,93 @@
 /**
  * @swagger
  * components:
- *  schemas:
- *    AuthLogin:
- *      type: object
- *      properties:
- *        email:
- *          type: string
- *          description: User's email for login
- *        password:
- *          type: string
- *          description: User's password for login
- *      required:
- *        - email
- *        - password
- *      example:
- *        email: "user@example.com"
- *        password: "password"
-
- *    RegisterCompany:
- *      type: object
- *      properties:
- *        legalId:
- *          type: string
- *          description: Legal identification of the company
- *        name:
- *          type: string
- *          description: Company name
- *        email:
- *          type: string
- *          description: Company email for registration
- *        password:
- *          type: string
- *          description: Company password for registration
- *        phone:
- *          type: object
- *          properties:
- *            office:
- *              type: string
- *              description: Company office phone number
- *        address:
- *          type: string
- *          description: Company address
- *        pricing:
- *          type: object
- *          properties:
- *            plan:
- *              type: string
- *              description: Company's subscription plan (free, premium, etc.)
- *            payDay:
- *              type: string
- *              format: date-time
- *              description: The next payment date for the plan
- *      required:
- *        - legalId
- *        - name
- *        - email
- *        - password
- *      example:
- *        legalId: "118050543"
- *        name: "Company.inc"
- *        email: "a@gmail.com"
- *        password: "password"
- *        phone:
- *          office: "89546734"
- *        address: "local 12 en la pangea de rosas"
- *        pricing:
- *          plan: "free"
- *          payDay: "2024-09-06 09:43:00"
-
- *    RegisterUser:
- *      type: object
- *      properties:
- *        name:
- *          type: string
- *          description: User's first name
- *        lastName:
- *          type: string
- *          description: User's last name
- *        lastName2:
- *          type: string
- *          description: User's second last name
- *        phone:
- *          type: object
- *          properties:
- *            mobile:
- *              type: string
- *              description: User's mobile phone number
- *        email:
- *          type: string
- *          description: User's email for registration
- *        password:
- *          type: string
- *          description: User's password for registration
- *      required:
- *        - name
- *        - lastName
- *        - lastName2
- *        - email
- *        - password
- *      example:
- *        name: "Javier"
- *        lastName: "Diaz"
- *        lastName2: "Marin"
- *        phone:
- *          mobile: "89234567"
- *        email: "javier.diaz.marin@est.una.ac.cr"
- *        password: "password"
+ *   schemas:
+ *     Login:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: User's email address
+ *           example: "user@example.com"
+ *         password:
+ *           type: string
+ *           description: User's password
+ *           example: "userPassword123"
+ *       required:
+ *         - email
+ *         - password
+ *
+ *     ForgotPassword:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: User's email to reset the password
+ *           example: "user@example.com"
+ *       required:
+ *         - email
+ *
+ *     ResetPassword:
+ *       type: object
+ *       properties:
+ *         newPassword:
+ *           type: string
+ *           description: New password for the user
+ *           example: "newSecurePassword123"
+ *       required:
+ *         - newPassword
+ *
+ *     RegisterOwner:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Owner's email address
+ *           example: "owner@example.com"
+ *         password:
+ *           type: string
+ *           description: Owner's password
+ *           example: "ownerPassword123"
+ *         name:
+ *           type: string
+ *           description: Owner's first name
+ *           example: "John"
+ *         lastname:
+ *           type: string
+ *           description: Owner's surname
+ *           example: "Doe"
+ *         lastname2:
+ *           type: string
+ *           description: Owner's second surname
+ *           example: "Smith"
+ *       required:
+ *         - email
+ *         - password
+ *         - name
+ *         - lastname
+ *         - lastname2
+ *
+ *     RegisterCompany:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Company's email address
+ *           example: "company@example.com"
+ *         password:
+ *           type: string
+ *           description: Company's password
+ *           example: "companyPassword123"
+ *         companyName:
+ *           type: string
+ *           description: Name of the company
+ *           example: "Tech Solutions Ltd."
+ *       required:
+ *         - email
+ *         - password
+ *         - companyName
  */

@@ -1,185 +1,190 @@
-import { User, Company } from '../models/index.js';
-import bcrypt from 'bcrypt';
-import sendVerificationEmail from '../utils/emails/verificationEmail.js';
+import { User, Company, Owner } from '../models/index.js';
+import sendForgotPasswordEmail from "../utils/emails/forgotPasswordEmail.js";
 import { generateEmailToken } from '../utils/tokens/emailVerifyToken.js';
-import { generateAccessToken } from '../utils/tokens/jwt.js';
+import { generateAccessToken, generateRefreshToken } from '../utils/tokens/jwt.js';
+import { UnauthorizedError } from '../errors/index.js';
+import ownerService from './ownerService.js';
+import companyService from './companyService.js';
 
 const authService = {
   login: async (email, password) => {
-    try {
-      const user = await User.scope("withPassword").findOne({ where: { email }});
-      const company = await Company.scope("withPassword").findOne({ where: { email } });
+        try {
+            const user = await User.findOne({
+                where: { email },
+                include: [
+                  Company,
+                  Owner
+                ],
+            });
 
-      if (!user && !company) {
-        throw new Error('User not found');
-      }
+            if (!user) {
+                throw new UnauthorizedError("user not registered", null);
+            }
 
-      if (user) {
-        if (!user.isEmailVerified) {
-          throw new Error('Email not verified');
+            const valid = await user.validatePassword(password);
+            if (!valid) {
+                throw new UnauthorizedError("invalid password", null);
+            }
+
+            if (user.emailVerificationToken) {
+                throw new UnauthorizedError("email not verified", null);  
+            }
+
+            const accessToken = generateAccessToken(user);
+            const refreshToken = generateRefreshToken(user);
+
+            user.refreshToken = refreshToken;
+            await user.save();
+
+            delete user.dataValues.password;
+            delete user.dataValues.refreshToken;
+            delete user.dataValues.verifyToken;
+            delete user.dataValues.recoverToken;
+
+            if (!user.Owner) {
+                delete user.dataValues.Owner;
+            }else{
+                delete user.dataValues.Company;
+            }
+
+            return {
+                user,
+                accessToken,
+                refreshToken,
+            };
+        } catch (error) {
+            throw error;
         }
+    },
+    logout: async (refreshToken) => {
+        try {
+            const decoded = await verifySignature(
+                refreshToken,
+                process.env.JWT_REFRESH_SECRET
+            );
 
-        if (!(await bcrypt.compare(password, user.password))) {
-          throw new Error('Invalid password');
+            if (!decoded) {
+                throw new UnauthorizedError("invalid token", refreshToken);
+            }
+
+            const user = await User.findOne({
+                where: { id: decoded.id },
+            });
+
+            if (!user) {
+                throw new UnauthorizedError("user not registered", refreshToken);
+            }
+
+            user.refreshToken = null;
+            await user.save();
+        } catch (error) {
+            throw error;
         }
+    },
+    handleRefreshToken: async (refreshToken) => {
+        try {
+            const decoded = await verifySignature(
+                refreshToken,
+                process.env.JWT_REFRESH_SECRET
+            );
 
-        const accessToken = generateAccessToken(user);
-        user.accessToken = accessToken;
-        await user.save();
+            if (!decoded) {
+                throw new UnauthorizedError("Invalid token", refreshToken);
+            }
 
-        delete user.dataValues.password;
-        delete user.dataValues.verificationToken;
-        delete user.dataValues.accessToken;
-        delete user.dataValues.recoveryToken;
+            const user = await User.findOne({
+                where: { id: decoded.id },
+            });
+            if (!user) {
+                throw new UnauthorizedError("User not registered", refreshToken);
+            }
 
-        return {user, accessToken};
-      }
+            delete user.dataValues.password;
+            delete user.dataValues.refreshToken;
+            delete user.dataValues.emailVerificationToken;
+            delete user.dataValues.recoveryToken;
 
-      if (company) {
-        if (!company.isEmailVerified) {
-          throw new Error('Email not verified');
+            const accessToken = generateAccessToken(user);
+            return {
+                user,
+                accessToken,
+            };
+        } catch (error) {
+            throw error;
         }
+    },
+    confirmEmail: async (emailVerificationToken) => {
+        try {
+            const user = await User.findOne({
+                where: { emailVerificationToken },
+            });
 
-        if (!(await bcrypt.compare(password, company.password))) {
-          throw new Error('Invalid password');
+            if (!user) {
+                throw new UnauthorizedError("Token inválido", verifyToken);
+            }
+            user.emailVerificationToken = null;
+            await user.save();
+        } catch (error) {
+            throw error;
         }
+    },
+    forgotPassword: async (email) => {
+        try {
+            const user = await User.findOne({
+                where: { email },
+            });
 
-        const accessToken = generateAccessToken(company);
-        company.accessToken = accessToken;
-        await company.save();
+            if (!user) {
+                throw new NotFoundError("Email", email);
+            }
 
-        delete company.dataValues.password;
-        delete company.dataValues.verificationToken;
-        delete company.dataValues.accessToken;
-        delete company.dataValues.recoveryToken;
+            if (user.emailVerificationToken) {
+                throw new UnauthorizedError("Email not verified", null);
+            }
 
-        return {company, accessToken};
-      }
-    } catch (error) {
-      throw error;
-    }
-  },
+            user.recoveryToken = generateEmailToken();
+            await user.save();
+            await sendForgotPasswordEmail(user.email, user.recoveryToken);
+        } catch (error) {
+            throw error;
+        }
+    },
+    resetPassword: async (recoveryToken, password) => {
+        try {
+            const user = await User.findOne({
+                where: { recoveryToken },
+            });
 
-  register: async (userData) => {
-    try {
-      const user = await User.create({
-        ...userData,
-        isEmailVerified: false,
-        verificationToken: generateEmailToken(),
-        role: 'user',
-      });
+            if (!user) {
+                throw new UnauthorizedError("Token inválido", recoveryToken);
+            }
 
-      delete user.dataValues.password;
+            user.password = password;
+            user.recoveryToken = null;
+            await user.save();
+        } catch (error) {
+            throw error;
+        }
+    },
 
-      await sendVerificationEmail(user.email, user.verificationToken);
+    registerOwner: async (ownerData) => {
+        try {
+            const owner = await ownerService.create(ownerData);
+            return owner;
+        } catch (error) {
+            throw error;
+        }
+    },
 
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  },
+    registerCompany: async (companyData) => {
+        try {
+            const company = await companyService.create(companyData);
+            return company;
+        } catch (error) {
+            throw error;
+        }
+    },
 
-  registerCompany: async (companyData) => {
-    try {
-
-      console.log("Entra a registerCompany");
-
-      const company = await Company.create({
-        ...companyData,
-        isEmailVerified: false,
-        verificationToken: generateEmailToken(),
-        role: 'company',
-      });
-
-      delete company.dataValues.password;
-
-      await sendVerificationEmail(company.email, company.verificationToken);
-
-      return company;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  verifyEmail: async (token) => {
-    try {
-      const user = await User.findOne({ where: { verificationToken: token } });
-      const company = await Company.findOne({
-        where: { verificationToken: token },
-      });
-
-      if (!user && !company) {
-        throw new Error('Invalid token');
-      }
-
-      if (user) {
-        user.isEmailVerified = true;
-        user.verificationToken = null;
-        await user.save();
-      }
-
-      if (company) {
-        company.isEmailVerified = true;
-        company.verificationToken = null;
-        await company.save();
-      }
-
-      return { message: 'Email verified' };
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  refreshToken: async (expiredToken) => {
-    try {
-      const user = await User.findOne({ where: { accessToken: expiredToken } });
-      const company = await Company.findOne({ where: { accessToken: expiredToken } });
-
-      if (!user && !company) {
-        throw new Error('Invalid token');
-      }
-
-      if (user) {
-        user.accessToken = generateAccessToken(user);
-        await user.save();
-        return { user, accessToken: user.accessToken };
-      }
-
-      if (company) {
-        company.accessToken = generateAccessToken(company);
-        await company.save();
-        return { company, accessToken: company.accessToken };
-      }
-
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  },
-
-  logout: async (token) => {
-    try {
-      const user = await User.findOne({ where: { accessToken: token } });
-      const company = await Company.findOne({ where: { accessToken: token } });
-
-      if (!user && !company) {
-        throw new Error('Invalid token');
-      }
-
-      if (user) {
-        user.accessToken = null;
-        await user.save();
-      }
-
-      if (company) {
-        company.accessToken = null;
-        await company.save();
-      }
-
-      return { message: 'Logout successful' };
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  },
 
 };
 
