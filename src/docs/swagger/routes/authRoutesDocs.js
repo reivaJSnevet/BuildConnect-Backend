@@ -123,7 +123,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/RegisterOwner'
+ *             $ref: '#/components/schemas/UserOwner'
  *     responses:
  *       '201':
  *         description: Owner registered successfully
@@ -142,7 +142,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/RegisterCompany'
+ *             $ref: '#/components/schemas/UserCompany'
  *     responses:
  *       '201':
  *         description: Company registered successfully
