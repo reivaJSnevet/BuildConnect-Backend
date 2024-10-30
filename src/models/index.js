@@ -25,8 +25,11 @@ ProjectType.belongsToMany(Project, { through: "project_type", as: "types" });
 Owner.belongsToMany(Company, { through: Rating, as: "ratings" });
 Company.belongsToMany(Owner, { through: Rating, as: "reviewers" });
 
-Owner.belongsToMany(Company, { through: Comment, as: "comments" });
-Company.belongsToMany(Owner, { through: Comment, as: "authors" });
+Owner.hasMany(Comment, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+Comment.belongsTo(Owner, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+
+Company.hasMany(Comment, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+Comment.belongsTo(Company, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
 
 Owner.belongsToMany(Company, { through: "rating_permission", onDelete: 'Cascade', as: "permissions" });
 Company.belongsToMany(Owner, { through : "rating_permission", onDelete: 'Cascade', as: "permissions" });

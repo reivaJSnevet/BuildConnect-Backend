@@ -1,63 +1,63 @@
 import commentService from "../services/commentService.js";
 
 const commentController = {
-    createComment: async (req, res) => {
+    createComment: async (req, res, next) => {
         try {
             const newComment = req.body;
             const comment = await commentService.createComment(newComment);
             res.status(201).json(comment);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    getAllComments: async (req, res) => {
+    getAllComments: async (req, res, next) => {
         try {
             const comments = await commentService.getAllComments();
             res.status(200).json(comments);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    getCommentById: async (req, res) => {
+    getCommentById: async (req, res, next) => {
         try {
             const { id } = req.params;
             const comment = await commentService.getCommentById(id);
             res.status(200).json(comment);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    updateComment: async (req, res) => {
+    updateComment: async (req, res, next) => {
         try {
             const { id } = req.params;
             const updatedComment = req.body;
             const comment = await commentService.updateComment(id, updatedComment);
             res.status(200).json(comment);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    deleteComment: async (req, res) => {
+    deleteComment: async (req, res, next) => {
         try {
             const { id } = req.params;
             const result = await commentService.deleteComment(id);
             res.status(200).json({ message: result });
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 
-    getAllByUser: async (req, res) => {
+    getAllByUser: async (req, res, next) => {
         try {
             const { userId } = req.params;
             const comments = await commentService.getAllByUser(userId);
             res.status(200).json(comments);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     },
 };
