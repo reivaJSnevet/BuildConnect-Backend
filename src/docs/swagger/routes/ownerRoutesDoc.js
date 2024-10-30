@@ -25,11 +25,8 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
- *                   example: "Owner created successfully"
  *                 owner:
- *                   $ref: '#/components/schemas/User'
+ *                   $ref: '#/components/schemas/UserOwner'
  *       '400':
  *         description: Bad request
  *         content:
