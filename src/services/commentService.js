@@ -1,10 +1,33 @@
-import { Comment, User } from "../models/index.js";
+import { Comment, User, Owner, Company } from "../models/index.js";
+import { NotFoundError, ValidationError } from "../errors/index.js";
 
 const commentService = {
     createComment: async (newComment) => {
         try {
-        //logica permiso
-            const comment = await Comment.create(newComment);
+            const user = await User.findByPk(newComment.userId, {
+                include: Owner,
+            });
+            if (!user || !user.Owner) {
+                throw new NotFoundError("User", newComment.userId);
+            }
+
+            const company = await User.findByPk(newComment.companyId, {
+                include: Company,
+            });
+            if (!company || !company.Company) {
+                throw new NotFoundError("Company", newComment.CompanyLegalId);
+            }
+
+            user.Owner.hasPermission(company.Company.legalId);
+            if (!user.Owner.hasPermission(company.Company.legalId)) {
+                throw new ValidationError("User does not have permission to comment this company", "companyId");
+            }
+
+            const comment = await Comment.create({
+                OwnerId: user.Owner.id,
+                CompanyLegalId: company.Company.legalId,
+                text: newComment.text,
+            });
             return comment;
         } catch (error) {
             throw error;

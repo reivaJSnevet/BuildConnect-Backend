@@ -1,58 +1,85 @@
 /**
  * @swagger
  * components:
- *  schemas:
- *    Project:
- *      type: object
- *      properties:
- *        id:
- *          type: string
- *          format: uuid
- *          description: The auto-generated UUID of the project
- *        title:
- *          type: string
- *          description: The title of the project
- *        description:
- *          type: string
- *          description: A brief description of the project
- *        location:
- *          type: string
- *          description: The location where the project is being carried out
- *        projectType:
- *          type: string
- *          enum: ["Revisión y Manatenimiento", "Reparaciones", "Demolición", "Diseño"]
- *          description: The type of project
- *        starDate:
- *          type: string
- *          format: date
- *          description: The start date of the project
- *        endDate:
- *          type: string
- *          format: date
- *          description: The end date of the project
- *        budget:
- *          type: integer
- *          description: The budget assigned to the project
- *        isFeactured:
- *          type: boolean
- *          description: Indicates if the project is featured
- *      required:
- *        - title
- *        - description
- *        - location
- *        - projectType
- *        - starDate
- *        - endDate
- *        - budget
- *        - isFeactured
- *      example:
- *        id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
- *        title: "Building Renovation"
- *        description: "A complete renovation of a commercial building"
- *        location: "1234 Main St, City, Country"
- *        projectType: "Reparaciones"
- *        starDate: "2024-01-01"
- *        endDate: "2024-06-30"
- *        budget: 50000
- *        isFeactured: true
+ *   schemas:
+ *     Project:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *           description: Unique identifier for the project
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
+ *         title:
+ *           type: string
+ *           description: The title of the project
+ *           example: "Community Housing Development"
+ *         description:
+ *           type: string
+ *           description: Detailed description of the project
+ *           example: "A project aimed at developing affordable housing in the community."
+ *         location:
+ *           type: object
+ *           description: JSON object representing the location of the project
+ *           properties:
+ *             province:
+ *               type: string
+ *               description: Province where the project is located
+ *               example: "San José"
+ *             canton:
+ *               type: string
+ *               description: Canton within the province
+ *               example: "Central"
+ *           required:
+ *             - province
+ *             - canton
+ *         startDate:
+ *           type: string
+ *           format: date
+ *           description: Start date of the project, must be after the current date
+ *           example: "2025-11-15"
+ *         endDate:
+ *           type: string
+ *           format: date
+ *           description: End date of the project, must be after the start date
+ *           example: "2025-12-30"
+ *         budget:
+ *           type: integer
+ *           description: Budget allocated to the project in currency units
+ *           example: 500000
+ *         pricing:
+ *           type: object
+ *           description: JSON object containing pricing information for the project
+ *           properties:
+ *             plan:
+ *               type: string
+ *               description: Pricing plan for the project
+ *               example: "Standard"
+ *             billingCycle:
+ *               type: string
+ *               description: Billing cycle for the project payments (e.g., monthly, annually)
+ *               example: "monthly"
+ *             billingDate:
+ *               type: string
+ *               format: date
+ *               description: Billing start date for the project
+ *               example: "2025-12-15"
+ *           required:
+ *             - plan
+ *             - billingCycle
+ *             - billingDate
+ *         UserId:
+ *           type: string
+ *           format: uuid 
+ *           description: Unique identifier for the project owner
+ *           example: 123e4567-e89b-12d3-a456-426614174000
+ *       required:
+ *         - title
+ *         - description
+ *         - location
+ *         - startDate
+ *         - endDate
+ *         - budget
+ *         - pricing
+ *         - UserId
  */

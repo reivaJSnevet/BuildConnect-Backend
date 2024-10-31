@@ -12,7 +12,7 @@
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/User'
+ *                 $ref: '#/components/schemas/UserResponse'
  *       500:
  *         description: Internal server error
  *   post:
@@ -23,14 +23,14 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/UserInput'
  *     responses:
  *       201:
  *         description: User created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/UserResponse'
  *       400:
  *         description: Bad request, incomplete user data
  *       500:
@@ -47,16 +47,17 @@
  *       - in: path
  *         name: id
  *         required: true
- *         description: The id of the user
+ *         description: The id of the user (UUID format)
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
  *       200:
  *         description: User retrieved successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/UserResponse'
  *       404:
  *         description: User not found
  *       500:
@@ -68,24 +69,27 @@
  *       - in: path
  *         name: id
  *         required: true
- *         description: The id of the user
+ *         description: The id of the user (UUID format)
  *         schema:
  *           type: string
+ *           format: uuid
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/UserInput'
  *     responses:
  *       200:
  *         description: User updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/UserResponse'
  *       400:
  *         description: Bad request, incomplete user data
+ *       404:
+ *         description: User not found
  *       500:
  *         description: Internal server error
  *   delete:
@@ -95,9 +99,10 @@
  *       - in: path
  *         name: id
  *         required: true
- *         description: The id of the user
+ *         description: The id of the user (UUID format)
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
  *       200:
  *         description: User deleted successfully

@@ -1,19 +1,41 @@
-import { Company } from "../models/index.js";
+import db from "../config/db.js";
+import { Company, User, Project } from "../models/index.js";
 import { NotFoundError } from "../errors/index.js";
 
 const companyService = {
     create: async (newCompany) => {
+      const transaction = await db.transaction();
         try {
-        const company = await Company.create(newCompany);
-        return company;
+          
+          if (newCompany.role !== "company") {
+            throw new ValidationError("Role must be company", "role");
+          }
+
+          const company = await User.create(newCompany, { include: Company, transaction });
+          await transaction.commit();
+
+          delete company.dataValues.password;
+          delete company.dataValues.emailVerificationToken;
+
+          return company;
         } catch (error) {
-        throw error;
+          await transaction.rollback();
+          throw error;
         }
     },
     
     getAll: async () => {
         try {
-        const companies = await Company.findAll();
+          const companies =
+            await User.findAll(
+              {
+                include:
+                {
+                  model: Company,
+                  required: true,
+                },
+              },
+            );
         return companies;
         } catch (error) {
         throw error;
@@ -22,9 +44,11 @@ const companyService = {
     
     getById: async (id) => {
         try {
-        const company = await Company.findByPk(id);
-        if (!company) {
-            throw new Error(`Company not found with id: ${id}`);
+        const company = await User.findByPk(id, {
+            include: Company,
+        });
+        if (!company || !company.Company) {
+            throw new NotFoundError("User", id);
         }
         return company;
         } catch (error) {
@@ -32,55 +56,88 @@ const companyService = {
         }
     },
 
-    update: async (id, updatedCompany) => {
+    update: async (id, newValues) => {
+        const transaction = await db.transaction();
         try {
-        const company = await Company.findByPk(id);
-        if (!company) {
-            throw new Error(`Company not found with id: ${id}`);
-        }
-        const updated = await company.update(updatedCompany);
-        return updated;
+          const user = await User.findByPk(id, {
+              include: Company,
+          });
+          if (!user || !user.Company) {
+              throw new NotFoundError("User", id);
+          }
+
+          await user.Company.update(newValues.Company, { transaction });
+          await user.Company.save();
+
+
+          await user.update(newValues, { transaction });
+          await transaction.commit();
+
+          await transaction.commit();
+          return await User.findByPk(id, {
+              include: Company,
+          });
         } catch (error) {
-        throw error;
+            await transaction.rollback();
+            throw error;
         }
     },
 
     delete: async (id) => {
         try {
-        const company = await Company.findByPk(id);
-        if (!company) {
-            throw new Error(`Company not found with id: ${id}`);
-        }
-        await company.destroy();
-        return `Company with id: ${id} has been deleted`;
+          const company = await User.findByPk(id);
+          if (!company || !company.Company) {
+              throw new NotFoundError("User", id);
+          }
+
+          await company.destroy();
+          return `User with id: ${id} has been deleted`;
         } catch (error) {
-        throw error;
+          throw error;
         }
     },
 
     addBookmark: async (companyId, projectId) => {
         try {
-        const company = await Company.findByPk(companyId);
-        if (!company) {
-            throw new NotFoundError("Company", companyId);
-        }
-        await company.addBookmark(projectId);
-        return `Project with id: ${projectId} has been bookmarked by company with id: ${companyId}`;
+          const user = await User.findByPk(companyId, {
+              include: Company,
+          });
+
+          if (!user || !user.Company) {
+              throw new NotFoundError("User", companyId);
+          }
+
+          const project = await Project.findByPk(projectId);
+          if (!project) {
+              throw new NotFoundError("Project", projectId);
+          }
+
+          await user.Company.addBookmark(project);
+          return user;
         } catch (error) {
-        throw error;
+          throw error;
         }
     },
 
     removeBookmark: async (companyId, projectId) => {
         try {
-        const company = await Company.findByPk(companyId);
-        if (!company) {
-            throw new NotFoundError("Company", companyId);
-        }
-        await company.removeBookmark(projectId);
-        return `Project with id: ${projectId} has been removed from bookmarks of company with id: ${companyId}`;
+          const user = await User.findByPk(companyId, {
+              include: Company,
+          });
+
+          if (!user || !user.Company) {
+              throw new NotFoundError("User", companyId);
+          }
+
+          const project = await Project.findByPk(projectId);
+          if (!project) {
+              throw new NotFoundError("Project", projectId);
+          }
+
+          await user.Company.removeBookmark(project);
+          return user;
         } catch (error) {
-        throw error;
+          throw error;
         }
     },
 };

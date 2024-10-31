@@ -1,31 +1,31 @@
 /**
  * @swagger
  * tags:
- *   - name: Categories
- *     description: Operations related to categories.
+ *   - name: ProjectType
+ *     description: Endpoints for managing project types
  */
 
 /**
  * @swagger
- * /categories:
+ * /project-type:
  *   post:
- *     summary: Create a new category
- *     tags: [Categories]
+ *     summary: Create a new project type
+ *     tags: [ProjectType]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             $ref: '#/components/schemas/ProjectType'
  *     responses:
  *       '201':
- *         description: Category created successfully
+ *         description: Project type created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Category'
+ *               $ref: '#/components/schemas/ProjectType'
  *       '400':
- *         description: Bad request
+ *         description: Invalid input data
  *         content:
  *           application/json:
  *             schema:
@@ -33,49 +33,49 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Invalid input data for category"
+ *                   example: "Invalid input data"
  */
 
 /**
  * @swagger
- * /categories:
+ * /project-type:
  *   get:
- *     summary: Retrieve a list of all categories
- *     tags: [Categories]
+ *     summary: Retrieve a list of all project types
+ *     tags: [ProjectType]
  *     responses:
  *       '200':
- *         description: List of categories
+ *         description: A list of project types
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Category'
+ *                 $ref: '#/components/schemas/ProjectType'
  */
 
 /**
  * @swagger
- * /categories/{id}:
+ * /project-type/{id}:
  *   get:
- *     summary: Retrieve a category by ID
- *     tags: [Categories]
+ *     summary: Retrieve a project type by ID
+ *     tags: [ProjectType]
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID of the category
+ *         description: Unique identifier for the project type
  *         schema:
  *           type: string
  *           format: uuid
  *     responses:
  *       '200':
- *         description: Category retrieved successfully
+ *         description: Project type retrieved successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Category'
+ *               $ref: '#/components/schemas/ProjectType'
  *       '404':
- *         description: Category not found
+ *         description: Project type not found
  *         content:
  *           application/json:
  *             schema:
@@ -83,20 +83,20 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Category not found"
+ *                   example: "Project type not found"
  */
 
 /**
  * @swagger
- * /categories/{id}:
+ * /project-type/{id}:
  *   put:
- *     summary: Update a category by ID
- *     tags: [Categories]
+ *     summary: Update a project type by ID
+ *     tags: [ProjectType]
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID of the category
+ *         description: Unique identifier for the project type
  *         schema:
  *           type: string
  *           format: uuid
@@ -105,16 +105,16 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             $ref: '#/components/schemas/ProjectType'
  *     responses:
  *       '200':
- *         description: Category updated successfully
+ *         description: Project type updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Category'
+ *               $ref: '#/components/schemas/ProjectType'
  *       '400':
- *         description: Bad request
+ *         description: Invalid input data
  *         content:
  *           application/json:
  *             schema:
@@ -122,9 +122,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Invalid input data for category"
+ *                   example: "Invalid input data"
  *       '404':
- *         description: Category not found
+ *         description: Project type not found
  *         content:
  *           application/json:
  *             schema:
@@ -132,28 +132,28 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Category not found"
+ *                   example: "Project type not found"
  */
 
 /**
  * @swagger
- * /categories/{id}:
+ * /project-type/{id}:
  *   delete:
- *     summary: Delete a category by ID
- *     tags: [Categories]
+ *     summary: Delete a project type by ID
+ *     tags: [ProjectType]
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID of the category
+ *         description: Unique identifier for the project type
  *         schema:
  *           type: string
  *           format: uuid
  *     responses:
  *       '204':
- *         description: Category deleted successfully
+ *         description: Project type deleted successfully
  *       '404':
- *         description: Category not found
+ *         description: Project type not found
  *         content:
  *           application/json:
  *             schema:
@@ -161,5 +161,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Category not found"
+ *                   example: "Project type not found"
  */

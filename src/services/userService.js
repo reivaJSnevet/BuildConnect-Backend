@@ -1,116 +1,132 @@
-import { User } from "../models/index.js";
+import { User } from '../models/index.js';
+import { ForbiddenError, NotFoundError } from '../errors/index.js';
+import { generateEmailToken } from '../utils/tokens/emailVerifyToken.js';
+import sendVerificationEmail from '../utils/emails/verificationEmail.js';
 
 const userService = {
-  create: async (newUser) => {
-    try {
-      const user = await User.create(newUser);
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  },
+    create: async newUser => {
+        try {
 
-  getAll: async () => {
-    try {
-      const users = await User.findAll();
-      return users;
-    } catch (error) {
-      throw error;
-    }
-  },
+            const user = await User.create(newUser);
 
-  getById: async (id) => {
-    try {
-      const user = await User.findByPk(id);
-      if (!user) {
-        throw new Error(`User not found with id: ${id}`);
-      }
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  },
+            delete user.dataValues.password;
+            delete user.dataValues.emailVerificationToken;
 
-  update: async (id, updatedUser) => {
-    try {
-      const user = await User.findByPk(id);
-      if (!user) {
-        throw new Error(`User not found with id: ${id}`);
-      }
-      const updated = await user.update(updatedUser);
-      return updated;
-    } catch (error) {
-      throw error;
-    }
-  },
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    },
 
-  delete: async (id) => {
-    try {
-      const user = await User.findByPk(id);
-      if (!user) {
-        throw new Error(`User not found with id: ${id}`);
-      }
-      await user.destroy();
-      return `User with id: ${id} has been deleted`;
-    } catch (error) {
-      throw error;
-    }
-  },
+    getAll: async () => {
+        try {
+            const users = await User.findAll();
+            return users;
+        } catch (error) {
+            throw error;
+        }
+    },
 
-  addPermission: async (userId, companyId) => {
-    try {
-      const user = await User.findByPk(userId);
-      if (!user) {
-        throw new Error(`User not found with id: ${userId}`);
-      }
-      await user.addPermission(companyId);
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  },
+    getById: async id => {
+        try {
+            const user = await User.findByPk(id);
+            if (!user) {
+                throw new NotFoundError('User', id);
+            }
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    },
 
-  removePermission: async (userId, companyId) => {
-    try {
-      const user = await User.findByPk(userId);
-      if (!user) {
-        throw new Error(`User not found with id: ${userId}`);
-      }
-      await user.removePermission(companyId);
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  },
+    update: async (id, newValues) => {
+        try {
+            const user = await User.findByPk(id);
+            if (!user) {
+                throw new NotFoundError('User', id);
+            }
+            const updated = await user.update(newValues);
+            return updated;
+        } catch (error) {
+            throw error;
+        }
+    },
 
-  addRating: async (userId, companyId, score) => {
-    try {
-      const companyCompanyId = companyId;
-      const user = await User.findByPk(userId);
-      if (!user) {
-        throw new Error(`User not found with id: ${userId}`);
-      }
-      await user.addRating( companyCompanyId, { through: { score } });
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  },
+    delete: async id => {
+        try {
+            const user = await User.findByPk(id);
+            if (!user) {
+                throw new NotFoundError('User', id);
+            }
+            await user.destroy();
+            return `User with id: ${id} has been deleted`;
+        } catch (error) {
+            throw error;
+        }
+    },
 
-  updateRating: async (userId, companyId, score) => {
-    try {
-      const companyCompanyId = companyId;
-      const user = await User.findByPk(userId);
-      if (!user) {
-        throw new Error(`User not found with id: ${userId}`);
-      }
-      await user.addRating(companyCompanyId, { through: { score }, update: true });
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  },
+    addPermission: async (userId, companyId) => {
+        try {
+            const user = await User.findByPk(userId);
+            if (!user) {
+                throw new NotFoundError('User', userId);
+            }
+            await user.addPermission(companyId);
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    },
 
+    removePermission: async (userId, companyId) => {
+        try {
+            const user = await User.findByPk(userId);
+            if (!user) {
+                throw new NotFoundError('User', userId);
+            }
+            await user.removePermission(companyId);
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    addRating: async (userId, companyId, score) => {
+        try {
+            const companyCompanyId = companyId;
+            const user = await User.findByPk(userId);
+            if (!user) {
+                throw new NotFoundError('User', userId);
+            }
+            await user.addRating(companyCompanyId, {
+                through: {
+                    score,
+                },
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    updateRating: async (userId, companyId, score) => {
+        try {
+            const companyCompanyId = companyId;
+            const user = await User.findByPk(userId);
+            if (!user) {
+                throw new NotFoundError('User', userId);
+            }
+            await user.addRating(companyCompanyId, {
+                through: {
+                    score,
+                },
+                update: true,
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 export default userService;

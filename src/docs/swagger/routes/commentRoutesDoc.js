@@ -1,22 +1,32 @@
 /**
  * @swagger
+ * tags:
+ *   - name: Comments
+ *     description: Endpoints for managing comments
+ */
+
+/**
+ * @swagger
  * /comments:
  *   get:
- *     summary: Obtiene todos los comentarios
+ *     summary: Retrieve all comments
  *     tags: [Comments]
  *     responses:
- *       200:
- *         description: Lista de comentarios obtenida correctamente
+ *       '200':
+ *         description: List of all comments
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Comment'
- *       500:
- *         description: Error interno del servidor
+ */
+
+/**
+ * @swagger
+ * /comments:
  *   post:
- *     summary: Crea un nuevo comentario
+ *     summary: Create a new comment
  *     tags: [Comments]
  *     requestBody:
  *       required: true
@@ -25,52 +35,71 @@
  *           schema:
  *             $ref: '#/components/schemas/Comment'
  *     responses:
- *       201:
- *         description: Comentario creado correctamente
+ *       '201':
+ *         description: Comment successfully created
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Comment'
- *       400:
- *         description: Petición incorrecta, datos del comentario incompletos
- *       500:
- *         description: Error interno del servidor
+ *       '400':
+ *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input data"
  */
 
 /**
  * @swagger
  * /comments/{id}:
  *   get:
- *     summary: Obtiene un comentario por su id
+ *     summary: Retrieve a comment by ID
  *     tags: [Comments]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: El id del comentario
+ *         description: Unique ID of the comment
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
- *       200:
- *         description: Comentario obtenido correctamente
+ *       '200':
+ *         description: Comment successfully retrieved
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Comment'
- *       404:
- *         description: Comentario no encontrado
- *       500:
- *         description: Error interno del servidor
+ *       '404':
+ *         description: Comment not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Comment not found"
+ */
+
+/**
+ * @swagger
+ * /comments/{id}:
  *   put:
- *     summary: Actualiza un comentario por su id
+ *     summary: Update a comment by ID
  *     tags: [Comments]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: El id del comentario
+ *         description: Unique ID of the comment
  *         schema:
  *           type: string
+ *           format: uuid
  *     requestBody:
  *       required: true
  *       content:
@@ -78,61 +107,94 @@
  *           schema:
  *             $ref: '#/components/schemas/Comment'
  *     responses:
- *       200:
- *         description: Comentario actualizado correctamente
+ *       '200':
+ *         description: Comment successfully updated
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Comment'
- *       400:
- *         description: Petición incorrecta, datos del comentario incompletos
- *       404:
- *         description: Comentario no encontrado
- *       500:
- *         description: Error interno del servidor
+ *       '400':
+ *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input data"
+ *       '404':
+ *         description: Comment not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Comment not found"
+ */
+
+/**
+ * @swagger
+ * /comments/{id}:
  *   delete:
- *     summary: Elimina un comentario por su id
+ *     summary: Delete a comment by ID
  *     tags: [Comments]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: El id del comentario
+ *         description: Unique ID of the comment
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
- *       200:
- *         description: Comentario eliminado correctamente
- *       404:
- *         description: Comentario no encontrado
- *       500:
- *         description: Error interno del servidor
+ *       '204':
+ *         description: Comment successfully deleted
+ *       '404':
+ *         description: Comment not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Comment not found"
  */
 
 /**
  * @swagger
  * /comments/user/{userId}:
  *   get:
- *     summary: Obtiene todos los comentarios de un usuario por su id
+ *     summary: Retrieve all comments by a specific user
  *     tags: [Comments]
  *     parameters:
- *       - in: path
- *         name: userId
+ *       - name: userId
+ *         in: path
  *         required: true
- *         description: El id del usuario
+ *         description: Unique ID of the user
  *         schema:
  *           type: string
+ *           format: uuid
  *     responses:
- *       200:
- *         description: Lista de comentarios del usuario obtenida correctamente
+ *       '200':
+ *         description: User comments successfully retrieved
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Comment'
- *       404:
- *         description: Usuario no encontrado o sin comentarios
- *       500:
- *         description: Error interno del servidor
+ *       '404':
+ *         description: User or comments not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User or comments not found"
  */

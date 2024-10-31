@@ -1,75 +1,102 @@
 /**
  * @swagger
+ * tags:
+ *   - name: Projects
+ *     description: Endpoints for managing projects
+ */
+
+/**
+ * @swagger
+ * /projects:
+ *   post:
+ *     summary: Create a new project
+ *     tags: [Projects]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Project'
+ *     responses:
+ *       '201':
+ *         description: Project created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Project'
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input data"
+ */
+
+/**
+ * @swagger
  * /projects:
  *   get:
- *     summary: Obtiene todos los proyectos
+ *     summary: Retrieve a list of all projects
  *     tags: [Projects]
  *     responses:
- *       200:
- *         description: Lista de proyectos obtenida correctamente
+ *       '200':
+ *         description: A list of projects
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Project'
- *       500:
- *         description: Error interno del servidor
- *   post:
- *     summary: Crea un nuevo proyecto
- *     tags: [Projects]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Project'
- *     responses:
- *       201:
- *         description: Proyecto creado correctamente
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Project'
- *       400:
- *         description: Petición incorrecta, datos del proyecto incompletos
- *       500:
- *         description: Error interno del servidor
  */
 
 /**
  * @swagger
  * /projects/{id}:
  *   get:
- *     summary: Obtiene un proyecto por su id
+ *     summary: Retrieve a project by ID
  *     tags: [Projects]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: El id del proyecto
+ *         description: Unique ID of the project
  *         schema:
  *           type: string
  *           format: uuid
  *     responses:
- *       200:
- *         description: Proyecto obtenido correctamente
+ *       '200':
+ *         description: Project retrieved successfully
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Project'
- *       404:
- *         description: Proyecto no encontrado
- *       500:
- *         description: Error interno del servidor
+ *       '404':
+ *         description: Project not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project not found"
+ */
+
+/**
+ * @swagger
+ * /projects/{id}:
  *   put:
- *     summary: Actualiza un proyecto por su id
+ *     summary: Update a project by ID
  *     tags: [Projects]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: El id del proyecto
+ *         description: Unique ID of the project
  *         schema:
  *           type: string
  *           format: uuid
@@ -80,32 +107,235 @@
  *           schema:
  *             $ref: '#/components/schemas/Project'
  *     responses:
- *       200:
- *         description: Proyecto actualizado correctamente
+ *       '200':
+ *         description: Project updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Project'
- *       400:
- *         description: Petición incorrecta, datos del proyecto incompletos
- *       500:
- *         description: Error interno del servidor
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input data"
+ *       '404':
+ *         description: Project not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project not found"
+ */
+
+/**
+ * @swagger
+ * /projects/{id}:
  *   delete:
- *     summary: Elimina un proyecto por su id
+ *     summary: Delete a project by ID
  *     tags: [Projects]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
- *         description: El id del proyecto
+ *         description: Unique ID of the project
  *         schema:
  *           type: string
  *           format: uuid
  *     responses:
- *       200:
- *         description: Proyecto eliminado correctamente
- *       404:
- *         description: Proyecto no encontrado
- *       500:
- *         description: Error interno del servidor
+ *       '204':
+ *         description: Project deleted successfully
+ *       '404':
+ *         description: Project not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project not found"
+ */
+
+/**
+ * @swagger
+ * /projects/{id}/categories/{categoryId}:
+ *   post:
+ *     summary: Add a category to a project
+ *     tags: [Projects]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the project
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - name: categoryId
+ *         in: path
+ *         required: true
+ *         description: ID of the category to be added
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Category added to the project successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Category added successfully"
+ *       '404':
+ *         description: Project or category not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project or category not found"
+ */
+
+/**
+ * @swagger
+ * /projects/{id}/categories/{categoryId}:
+ *   delete:
+ *     summary: Remove a category from a project
+ *     tags: [Projects]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the project
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - name: categoryId
+ *         in: path
+ *         required: true
+ *         description: ID of the category to be removed
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Category removed from the project successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Category removed successfully"
+ *       '404':
+ *         description: Project or category not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project or category not found"
+ */
+
+/**
+ * @swagger
+ * /projects/{id}/types/{typeId}:
+ *   post:
+ *     summary: Add a type to a project
+ *     tags: [Projects]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the project
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - name: typeId
+ *         in: path
+ *         required: true
+ *         description: ID of the type to be added
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Type added to the project successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Type added successfully"
+ *       '404':
+ *         description: Project or type not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project or type not found"
+ */
+
+/**
+ * @swagger
+ * /projects/{id}/types/{typeId}:
+ *   delete:
+ *     summary: Remove a type from a project
+ *     tags: [Projects]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the project
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - name: typeId
+ *         in: path
+ *         required: true
+ *         description: ID of the type to be removed
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Type removed from the project successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Type removed successfully"
+ *       '404':
+ *         description: Project or type not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Project or type not found"
  */

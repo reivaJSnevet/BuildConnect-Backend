@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import db from "../config/db.js";
 import Company from "./Company.js";
+import { NotFoundError } from "../errors/index.js";
 
 const Rating = db.define(
     "Rating",
@@ -14,6 +15,11 @@ const Rating = db.define(
         score: {
             type: DataTypes.FLOAT,
             allowNull: false,
+            validate:{
+                min: 0,
+                max: 5,
+            }
+
         },
     },
     {
@@ -32,16 +38,31 @@ const Rating = db.define(
 
 //Hooks
 const calculateRating = async (rating) => {
-    const company = await Company.findByPk(company.CompanyId);
+  try {
+
+    const company = await Company.findByPk(rating.CompanyLegalId);
+    if (!company) {
+      throw new NotFoundError('Company', rating.CompanyLegalId);
+    }
+
     const ratings = await Rating.findAll({
-        where: { CompanyId: rating.CompanyId },
+      where: { CompanyLegalId: rating.CompanyLegalId },
     });
-    let sum = 0;
-    ratings.forEach((rating) => {
-        sum += rating.score;
-    });
+
+    if (ratings.length === 0) {
+      company.rating = 0;
+      await company.save();
+      return;
+    }
+
+    const sum = ratings.reduce((acc, curr) => acc + curr.score, 0);
+    
     company.rating = sum / ratings.length;
     await company.save();
+
+  } catch (error) {
+    throw error;
+  }
 };
 
 export default Rating;

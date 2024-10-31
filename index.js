@@ -17,7 +17,9 @@ import {
     projectRoutes,
     commentRoutes,
     authRoutes,
-    contactRoutes
+    contactRoutes,
+    ownerRoutes,
+    projectTypeRoutes
 } from './src/routes/index.js';
 import requireJWT from './src/middlewares/requireJWT.js';
 
@@ -43,13 +45,15 @@ app.use("/api", contactRoutes);
 //routes
 app.use("/api/auth", authRoutes);
 
-app.use(requireJWT);
+/* app.use(requireJWT); */
 
 app.use("/api", userRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", companyRoutes);
 app.use("/api", projectRoutes);
 app.use("/api", commentRoutes);
+app.use("/api", ownerRoutes);
+app.use("/api", projectTypeRoutes);
 
 
 
