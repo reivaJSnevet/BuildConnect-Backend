@@ -16,14 +16,9 @@ const authService = {
                   Owner
                 ],
             });
-
             if (!user) {
                 throw new UnauthorizedError("user not registered", null);
             }
-            console.log(user);
-            console.log(email, " <===> ", password);
-            console.log("\x1b[32m%s\x1b[0m", await user.validatePassword(password));
-
 
             const valid = await user.validatePassword(password);
             if (!valid) {
