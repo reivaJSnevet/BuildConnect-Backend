@@ -38,7 +38,7 @@ const authController = {
 	},
 	handleRefreshToken: async (req, res, next) => {
 		try {
-			const refreshToken = req.cookies.refreshToken;
+			const refreshToken = req.cookies.refresh_Token;
 
 			const { user, accessToken } = await authService.handleRefreshToken(refreshToken);
 
