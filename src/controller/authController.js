@@ -26,7 +26,7 @@ const authController = {
 
 			await authService.logout(refreshToken);
 
-			res.clearCookie('refreshToken', {
+			res.clearCookie('refresh_Token', {
 				httpOnly: true,
 				sameSite: 'none',
 				secure: true,

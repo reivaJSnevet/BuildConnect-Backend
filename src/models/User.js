@@ -154,11 +154,11 @@ const verifyOnetoOneAssociation = async (user) => {
  * @param {string} password - The password to validate.
  * @returns {Promise<boolean>} - A promise that resolves to true if the password is valid, false otherwise.
  */
-User.prototype.validatePassword = function (password) {
+User.prototype.validatePassword = async function (password) {
   if (!this.password || !password) {
     return false;
   }
-  return bcrypt.compare(password, this.password);
+  return await bcrypt.compare(password, this.password);
 };
 
 export default User;

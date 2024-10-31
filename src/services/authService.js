@@ -1,7 +1,7 @@
 import { User, Company, Owner } from '../models/index.js';
 import sendForgotPasswordEmail from "../utils/emails/forgotPasswordEmail.js";
 import { generateEmailToken } from '../utils/tokens/emailVerifyToken.js';
-import { generateAccessToken, generateRefreshToken } from '../utils/tokens/jwt.js';
+import { generateAccessToken, generateRefreshToken, verifySignature } from '../utils/tokens/jwt.js';
 import { UnauthorizedError } from '../errors/index.js';
 import ownerService from './ownerService.js';
 import companyService from './companyService.js';
@@ -9,7 +9,7 @@ import companyService from './companyService.js';
 const authService = {
   login: async (email, password) => {
         try {
-            const user = await User.findOne({
+            const user = await User.scope("withSensitiveData").findOne({
                 where: { email },
                 include: [
                   Company,
@@ -20,6 +20,10 @@ const authService = {
             if (!user) {
                 throw new UnauthorizedError("user not registered", null);
             }
+            console.log(user);
+            console.log(email, " <===> ", password);
+            console.log("\x1b[32m%s\x1b[0m", await user.validatePassword(password));
+
 
             const valid = await user.validatePassword(password);
             if (!valid) {
@@ -38,8 +42,8 @@ const authService = {
 
             delete user.dataValues.password;
             delete user.dataValues.refreshToken;
-            delete user.dataValues.verifyToken;
-            delete user.dataValues.recoverToken;
+            delete user.dataValues.emailVerificationToken;
+            delete user.dataValues.recoveryToken;
 
             if (!user.Owner) {
                 delete user.dataValues.Owner;
