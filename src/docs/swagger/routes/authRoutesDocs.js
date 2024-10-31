@@ -20,6 +20,49 @@
  *     responses:
  *       '200':
  *         description: Successful login
+ *         headers:
+ *           Set-Cookie:
+ *             description: Contains the refresh token for the user session.
+ *             type: string
+ *             example: "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       format: uuid
+ *                       description: Unique identifier for the user
+ *                       example: "123e4567-e89b-12d3-a456-426614174000"
+ *                     email:
+ *                       type: string
+ *                       description: User's email address
+ *                       example: "example@example.com"
+ *                     role:
+ *                       type: string
+ *                       description: Role of the user (e.g., owner, company)
+ *                       example: "owner"
+ *                     contacts:
+ *                       type: object
+ *                       properties:
+ *                         emails:
+ *                           type: array
+ *                           items:
+ *                             type: string
+ *                             example: "contact@example.com"
+ *                         numbers:
+ *                           type: array
+ *                           items:
+ *                             type: string
+ *                             example: "1234567890"
+ *                 accessToken:
+ *                   type: string
+ *                   description: JWT access token for the user
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyM2U0NTY3LWU4OWItMTJkMy1hNDU2LTQyNjYxNDE3NDAwMCIsImVtYWlsIjoiZXhhbXBsZUBleGFtcGxlLmNvbSIsInJvbGUiOiJvd25lciIsImlhdCI6MTczMDMzNDg1MiwiZXhwIjoxNzMwMzM2NjUyfQ.OtZlgKRFCKXaJF38jcSzhw4t9AOmRCKFQY8p63ibsK8"
  *       '401':
  *         description: Unauthorized
  */

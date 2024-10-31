@@ -9,11 +9,11 @@
  *           type: string
  *           format: email
  *           description: User's email address
- *           example: "user@example.com"
+ *           example: "example@example.com"
  *         password:
  *           type: string
  *           description: User's password
- *           example: "userPassword123"
+ *           example: "securePassword123"
  *       required:
  *         - email
  *         - password
