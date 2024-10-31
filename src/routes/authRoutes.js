@@ -4,8 +4,8 @@ import authController from "../controller/authController.js";
 const authRouter = Router();
 
 authRouter.post("/login", authController.login);
-authRouter.post("/logout", authController.logout);
-authRouter.post("/refreshToken", authController.handleRefreshToken);
+authRouter.get("/logout", authController.logout);
+authRouter.get("/refresh-token", authController.handleRefreshToken);
 authRouter.get("/verify-email/:token", authController.confirmEmail);
 authRouter.post("/forgot-password", authController.forgotPassword);
 authRouter.post("/reset-password/:token", authController.resetPassword);

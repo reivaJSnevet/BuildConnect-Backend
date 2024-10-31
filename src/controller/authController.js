@@ -22,7 +22,7 @@ const authController = {
 	},
 	logout: async (req, res, next) => {
 		try {
-			const refreshToken = req.cookies.refreshToken;
+			const refreshToken = req.cookies.refresh_Token;
 
 			await authService.logout(refreshToken);
 
