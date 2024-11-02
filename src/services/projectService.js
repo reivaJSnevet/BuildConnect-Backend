@@ -41,6 +41,7 @@ const projectService = {
           include: [
             { model: Category, as: 'categories', through: { attributes: [] } },
             { model: ProjectType, as: 'types', through: { attributes: [] } },
+            { model: Owner, as: 'Owner', include: { model: User, attributes: { exclude: ['password'] } } },
           ],
         });
         if (!project) {
