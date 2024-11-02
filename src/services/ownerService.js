@@ -1,6 +1,7 @@
 import db from '../config/db.js';
 import { Owner, User, Company, Rating } from '../models/index.js';
 import { NotFoundError, ValidationError } from '../errors/index.js';
+import Project from '../models/Project.js';
 
 const ownerService = {
     create: async newOwner => {
@@ -41,7 +42,18 @@ const ownerService = {
     getById: async id => {
         try {
             const owner = await User.findByPk(id, {
-                include: Owner,
+                include: [
+                    {
+                        model: Owner,
+                        include: [
+                            {
+                                model: Project,
+                                as: 'projects',
+                                required: false,
+                            },
+                        ],
+                    },
+                ],
             });
             if (!owner || !owner.Owner) {
                 throw new NotFoundError('User', id);
