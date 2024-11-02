@@ -1,6 +1,7 @@
 import db from '../config/db.js';
-import { Owner, User, Company, Rating, Project } from '../models/index.js';
+import { Owner, User, Company, Rating, Category, ProjectType } from '../models/index.js';
 import { NotFoundError, ValidationError } from '../errors/index.js';
+import Project from '../models/Project.js';
 
 const ownerService = {
     create: async newOwner => {
@@ -44,15 +45,24 @@ const ownerService = {
                 include: [
                     {
                         model: Owner,
-                        include: [
-                            {
-                                model: Project,
-                                as: 'projects',
-                                required: false,
-                            },
-                        ],
-                    },
-                ],
+                        include: {
+                            model: Project,
+                            as: 'projects',
+                            include:[
+                                {
+                                    model: Category,
+                                    as: 'categories',
+                                    through: { attributes: []}
+                                },
+                                {
+                                    model: ProjectType,
+                                    as: 'types',
+                                    through: { attributes: []}
+                                }
+                            ]
+                        }
+                    }
+                ]
             });
             if (!owner || !owner.Owner) {
                 throw new NotFoundError('User', id);
