@@ -73,7 +73,7 @@ const User = db.define(
       allowNull: true,
     },
     refreshToken: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
   },
