@@ -11,7 +11,7 @@ const verifyPlan = async (req, res, next) => {
 				},
 			],
 		});
-		if (user.Company) {
+		if (user?.Company) {
 			req.plan = user.Company.pricing.plan;
 		}
 		next();
