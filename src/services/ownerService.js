@@ -218,6 +218,80 @@ const ownerService = {
 			throw error;
 		}
 	},
+
+
+    addPermission: async (id, companyId) => {
+        try {
+            const user = await User.findByPk(id, {
+                include: Owner,
+            });
+            if (!user || !user.Owner) {
+                throw new NotFoundError('User', id);
+            }
+
+            const company = await User.findByPk(companyId, {
+                include: Company,
+            });
+            if (!company || !company.Company) {
+                throw new NotFoundError('Company', companyId);
+            }
+
+            const hasPermission = await user.Owner.hasPermission(company.Company.legalId);
+            if (hasPermission) {
+                throw new ValidationError('User already has permission to rate this company', 'companyId');
+            }
+
+            await user.Owner.addPermission(company.Company.legalId);
+            return { message: 'Permission added successfully' };
+
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    removePermission: async (id, companyId) => {
+        try {
+            const user = await User.findByPk(id, {
+                include: Owner,
+            });
+            if (!user || !user.Owner) {
+                throw new NotFoundError('User', id);
+            }
+
+            const company = await User.findByPk(companyId, {
+                include: Company,
+            });
+            if (!company || !company.Company) {
+                throw new NotFoundError('Company', companyId);
+            }
+
+            const hasPermission = await user.Owner.hasPermission(company.Company.legalId);
+            if (!hasPermission) {
+                throw new ValidationError('User does not have permission to rate this company', 'companyId');
+            }
+
+            await user.Owner.removePermission(company.Company.legalId);
+            return { message: 'Permission removed successfully' };
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    getPermissions: async id => {
+        try {
+            const user = await User.findByPk(id, {
+                include: Owner,
+            });
+            if (!user || !user.Owner) {
+                throw new NotFoundError('User', id);
+            }
+
+            const permissions = await user.Owner.getPermissions();
+            return permissions;
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 export default ownerService;

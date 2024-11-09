@@ -17,7 +17,6 @@ const ProjectType = db.define(
         len: {
           args: [1, 255],
         },
-        isAlphanumeric: true,
       },
     },
   },

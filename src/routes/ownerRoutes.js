@@ -13,4 +13,8 @@ ownerRouter.get('/owners/:id/Rating', ownerController.getRatings);
 ownerRouter.post('/owners/:id/Rating', ownerController.addRating);
 ownerRouter.put('/owners/:id/Rating', ownerController.updateRating);
 
+ownerRouter.post("/owners/:id/permission/companies/:companyId", ownerController.addPermission);
+ownerRouter.delete("/owners/:id/permission/companies/:companyId", ownerController.removePermission);
+ownerRouter.get("/owners/:id/permission/companies", ownerController.getPermissions);
+
 export default ownerRouter;
