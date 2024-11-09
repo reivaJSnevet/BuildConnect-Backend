@@ -23,7 +23,7 @@ const projectService = {
 	getAll: async (plan) => {
 		try {
 			console.log(plan);
-			if (plan.plan === 'Basic') {
+			if (plan === 'Basic') {
 				const projects = await Project.findAll({
 					include: [
 						{ model: Category, as: 'categories', through: { attributes: [] } },

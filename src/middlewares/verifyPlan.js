@@ -11,7 +11,9 @@ const verifyPlan = async (req, res, next) => {
 				},
 			],
 		});
-		req.plan = user.Company.pricing;
+		if (user.Company) {
+			req.plan = user.Company.pricing.plan;
+		}
 		next();
 	} catch (error) {
 		next(error);
