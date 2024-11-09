@@ -142,6 +142,43 @@
 /**
  * @swagger
  * /owners/{id}/Rating:
+ *   get:
+ *     summary: get all ratings to an owner
+ *     tags: [Owners]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the owner
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       '200':
+ *         description: Rating added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Rating added successfully"
+ *       '404':
+ *         description: Owner not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Owner not found"
+ */
+
+/**
+ * @swagger
+ * /owners/{id}/Rating:
  *   post:
  *     summary: Add a rating to an owner
  *     tags: [Owners]
