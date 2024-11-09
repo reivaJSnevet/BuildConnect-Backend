@@ -74,6 +74,36 @@ const ownerController = {
             next(error);
         }
     },
+
+    addPermission: async (req, res, next) => {
+        try {
+            const { id, companyId } = req.params;
+            const message = await ownerService.addPermission(id, companyId);
+            res.status(200).json(message);
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    removePermission: async (req, res, next) => {
+        try {
+            const { id, companyId } = req.params;
+            const message = await ownerService.removePermission(id, companyId);
+            res.status(200).json(message);
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    getPermissions: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const permissions = await ownerService.getPermissions(id);
+            res.status(200).json(permissions);
+        } catch (error) {
+            next(error);
+        }
+    },
 };
 
 export default ownerController;
